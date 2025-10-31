@@ -1135,6 +1135,60 @@ def write_mop_docx(df_groups, df_objects, df_rules, out_path: str, hostname: str
     doc.save(out_path)
 
 
+def generate_excel(input_path: str, output_xlsx: str):
+    """
+    Generate an Excel file (.xlsx) with three sheets containing the tables.
+    The filename is derived from the hostname found in the config.
+    Returns the hostname for use in naming the file.
+    """
+    text = read_config_text(input_path)
+    hostname = extract_hostname(text)
+    
+    df_groups, df_objects, df_rules = build_tables_from_config_text(text)
+    
+    # Create Excel writer object
+    with pd.ExcelWriter(output_xlsx, engine='openpyxl') as writer:
+        # Write each table to a separate sheet
+        df_groups.to_excel(writer, sheet_name='Table 4 - Groups', index=False)
+        df_objects.to_excel(writer, sheet_name='Table 5 - Objects', index=False)
+        df_rules.to_excel(writer, sheet_name='Table 6 - Rules', index=False)
+        
+        # Get the workbook and apply formatting
+        workbook = writer.book
+        
+        # Format each sheet
+        for sheet_name in ['Table 4 - Groups', 'Table 5 - Objects', 'Table 6 - Rules']:
+            worksheet = workbook[sheet_name]
+            
+            # Style the header row (bold, colored background)
+            from openpyxl.styles import Font, PatternFill, Alignment
+            header_fill = PatternFill(start_color='2F5597', end_color='2F5597', fill_type='solid')
+            header_font = Font(bold=True, color='FFFFFF')
+            
+            for cell in worksheet[1]:
+                cell.fill = header_fill
+                cell.font = header_font
+                cell.alignment = Alignment(horizontal='center', vertical='center')
+            
+            # Auto-adjust column widths
+            for column in worksheet.columns:
+                max_length = 0
+                column_letter = column[0].column_letter
+                for cell in column:
+                    try:
+                        if len(str(cell.value)) > max_length:
+                            max_length = len(str(cell.value))
+                    except:
+                        pass
+                adjusted_width = min(max_length + 2, 50)  # Cap at 50 characters
+                worksheet.column_dimensions[column_letter].width = adjusted_width
+            
+            # Freeze the header row
+            worksheet.freeze_panes = 'A2'
+    
+    return hostname
+
+
 def generate_mop(input_path: str, output_docx: str):
     text = read_config_text(input_path)
     hostname = extract_hostname(text)

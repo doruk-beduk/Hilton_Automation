@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 
 # Import your generator
-from MOP_Generator import generate_mop
+from MOP_Generator import generate_mop, generate_excel
 
 ALLOWED_EXTS = {"txt", "pdf"}
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB
@@ -69,6 +69,47 @@ def convert():
             as_attachment=True,
             download_name=out_basename,
             mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        )
+
+@app.route("/convert-excel", methods=["POST"])
+def convert_excel():
+    if "file" not in request.files:
+        flash("No file part in request.")
+        return redirect(url_for("index"))
+
+    f = request.files["file"]
+    if f.filename == "":
+        flash("No file selected.")
+        return redirect(url_for("index"))
+
+    if not allowed_file(f.filename):
+        flash("Please upload a .txt or .pdf ASA config.")
+        return redirect(url_for("index"))
+
+    filename = secure_filename(f.filename)
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        in_path = os.path.join(tmpdir, filename)
+        f.save(in_path)
+
+        try:
+            # Generate Excel with hostname-based filename
+            hostname = generate_excel(in_path, os.path.join(tmpdir, "temp.xlsx"))
+            out_basename = f"{hostname}_MOP.xlsx"
+            out_path = os.path.join(tmpdir, out_basename)
+            
+            # Rename to final name
+            os.rename(os.path.join(tmpdir, "temp.xlsx"), out_path)
+        except Exception as e:
+            app.logger.exception("Failed to generate Excel")
+            flash(f"Failed to generate Excel: {e}")
+            return redirect(url_for("index"))
+
+        return send_file(
+            out_path,
+            as_attachment=True,
+            download_name=out_basename,
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
 
 if __name__ == "__main__":

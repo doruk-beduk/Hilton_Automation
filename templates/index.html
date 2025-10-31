@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ASA → MoP Converter</title>
+  <!-- Tailwind via CDN for quick, professional styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-neutral-950 text-neutral-100">
+  <div class="min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-2xl">
+      <!-- Card -->
+      <div class="bg-neutral-900/70 backdrop-blur rounded-2xl shadow-xl ring-1 ring-neutral-800">
+        <div class="px-6 pt-6 pb-2">
+          <h1 class="text-2xl font-semibold tracking-tight">ASA → MoP Converter</h1>
+          <p class="mt-2 text-neutral-300">
+            Upload an ASA configuration (<span class="font-mono">.txt</span> or <span class="font-mono">.pdf</span>). We’ll generate a polished
+            <span class="font-mono">.docx</span> MoP for download.
+          </p>
+        </div>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="px-6 py-3">
+              {% for msg in messages %}
+                <div class="mb-2 rounded-lg bg-red-500/10 text-red-300 border border-red-500/30 px-4 py-3 text-sm">
+                  {{ msg }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form class="px-6 pb-6" action="{{ url_for('convert') }}" method="post" enctype="multipart/form-data">
+          <!-- Dropzone -->
+          <label
+            id="dropzone"
+            class="mt-3 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-neutral-700 bg-neutral-900/40 hover:bg-neutral-900 transition-colors cursor-pointer px-6 py-10"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-10 w-10" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 15.75A4.5 4.5 0 0 0 7.5 20.25h9A4.5 4.5 0 0 0 21 15.75a4.5 4.5 0 0 0-4.5-4.5h-.75a3 3 0 1 0-5.85-.75M12 12l-3 3m0 0 3 3m-3-3h12"/>
+            </svg>
+            <div class="text-center">
+              <p class="font-medium">Click to choose a file or drag &amp; drop</p>
+              <p id="file-hint" class="mt-1 text-sm text-neutral-400">Accepted: {{ allowed_exts }} &middot; Max {{ max_mb }} MB</p>
+              <p id="file-name" class="mt-1 text-sm text-neutral-200 hidden"></p>
+            </div>
+            <input id="file-input" type="file" name="file" accept=".txt,.pdf" class="hidden" />
+          </label>
+
+          <!-- Submit -->
+          <div class="mt-6 flex items-center justify-end gap-3">
+            <a href="javascript:void(0);" id="clear-btn" class="text-sm text-neutral-400 hover:text-neutral-200 hidden">Clear</a>
+            <button
+              id="submit-btn"
+              type="submit"
+              disabled
+              class="inline-flex items-center rounded-xl bg-indigo-500/90 px-5 py-2.5 font-medium shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Generate MoP
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Footer note -->
+      <p class="mt-4 text-center text-xs text-neutral-400">
+        Your file is processed in memory and discarded after generating the document.
+      </p>
+    </div>
+  </div>
+
+  <script>
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('file-input');
+  const submitBtn = document.getElementById('submit-btn');
+  const fileName = document.getElementById('file-name');
+  const fileHint = document.getElementById('file-hint');
+  const clearBtn = document.getElementById('clear-btn');
+  const form = document.querySelector('form');
+
+  ['dragenter','dragover'].forEach(evt =>
+    dropzone.addEventListener(evt, e => {
+      e.preventDefault(); e.stopPropagation();
+      dropzone.classList.add('ring','ring-indigo-500/40','bg-neutral-900/60');
+    })
+  );
+  ['dragleave','drop'].forEach(evt =>
+    dropzone.addEventListener(evt, e => {
+      e.preventDefault(); e.stopPropagation();
+      dropzone.classList.remove('ring','ring-indigo-500/40','bg-neutral-900/60');
+    })
+  );
+
+  dropzone.addEventListener('drop', e => {
+    const dt = e.dataTransfer;
+    if (!dt || !dt.files || !dt.files.length) return;
+    fileInput.files = dt.files;
+    updateFileUI();
+  });
+
+  fileInput.addEventListener('change', updateFileUI);
+
+  function updateFileUI() {
+    const f = fileInput.files[0];
+    if (!f) {
+      submitBtn.disabled = true;
+      fileName.classList.add('hidden');
+      fileHint.classList.remove('hidden');
+      clearBtn.classList.add('hidden');
+      return;
+    }
+    fileName.textContent = f.name + ' — ' + (f.size/1024/1024).toFixed(2) + ' MB';
+    fileName.classList.remove('hidden');
+    fileHint.classList.add('hidden');
+    submitBtn.disabled = false;
+    clearBtn.classList.remove('hidden');
+  }
+
+  clearBtn.addEventListener('click', () => {
+    fileInput.value = '';
+    updateFileUI();
+  });
+
+  function setGeneratingUI() {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `
+      <div class="relative w-40 h-2 bg-neutral-700 rounded-full overflow-hidden">
+        <div id="progress-fill" class="absolute left-0 top-0 h-full bg-green-500 transition-all duration-200 ease-linear" style="width:0%"></div>
+      </div>
+      <span class="ml-3 text-sm">Generating...</span>
+    `;
+  }
+
+  function resetButtonUI() {
+    submitBtn.innerHTML = 'Generate MoP';
+    submitBtn.disabled = !fileInput.files.length; // re-enable if a file is still selected
+  }
+
+  function setProgress(percent) {
+    const bar = document.getElementById('progress-fill');
+    if (bar) bar.style.width = `${Math.min(100, Math.max(0, percent))}%`;
+  }
+
+  // Submit via fetch so we can reset UI when the response completes
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!fileInput.files.length) return;
+
+    setGeneratingUI();
+
+    // Simulated fill while waiting
+    let p = 0;
+    const interval = setInterval(() => {
+      if (p < 95) { p += Math.random()*5; setProgress(p); }
+    }, 200);
+
+    try {
+      const fd = new FormData(form);
+      const resp = await fetch(form.action, { method: 'POST', body: fd });
+
+      // Finish the bar
+      clearInterval(interval);
+      setProgress(100);
+
+      if (!resp.ok) {
+        // Show server error (if HTML with flash came back)
+        const text = await resp.text();
+        alert('Failed to generate MoP.\n\n' + text.slice(0, 500));
+        setTimeout(resetButtonUI, 600);
+        return;
+      }
+
+      // Get filename from Content-Disposition
+      const cd = resp.headers.get('Content-Disposition') || '';
+      const match = cd.match(/filename\*?=(?:UTF-8'')?["']?([^"';]+)["']?/i);
+      const filename = match ? decodeURIComponent(match[1]) : 'MOP.docx';
+
+      // Download blob
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      // Clean up UI shortly after the download is triggered
+      setTimeout(resetButtonUI, 800);
+    } catch (err) {
+      clearInterval(interval);
+      alert('Network error while generating MoP:\n' + err);
+      setTimeout(resetButtonUI, 600);
+    }
+  });
+</script>
+
+</body>
+</html>

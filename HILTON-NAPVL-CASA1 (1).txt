@@ -1,0 +1,1380 @@
+
+: 
+: Serial Number: JAD232414K6
+: Hardware:   ASA5506, 4096 MB RAM, CPU Atom C2000 series 1250 MHz, 1 CPU (4 cores)
+: Written by HiltonCDO at 19:58:36.761 UTC Sat Oct 11 2025
+: Call-
+!
+ASA Version 9.16(4)57 
+!
+hostname HILTON-NAPVL-CASA1
+domain-name hilton.com
+enable password $sha512$5000$K79Um3JcSpxqQ2IibUuXgg==$nrCXj1E2zhS4/uafvcJgTQ== pbkdf2
+service-module 1 keepalive-timeout 4
+service-module 1 keepalive-counter 6
+service-module sfr keepalive-timeout 4
+service-module sfr keepalive-counter 6
+names
+no mac-address auto
+
+!
+interface GigabitEthernet1/1
+ nameif New_POS_VLAN
+ security-level 50
+ ip address 10.122.103.1 255.255.255.192 
+!
+interface GigabitEthernet1/2
+ nameif inside
+ security-level 100
+ ip address 172.22.79.62 255.255.255.192 
+!
+interface GigabitEthernet1/3
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/4
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/5
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/6
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/7
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/8
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface Management1/1
+ management-only
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+banner motd +--------------------------------------------------------------------+
+banner motd |                    ***   NOTICE / WARNING   ***                    |
+banner motd +--------------------------------------------------------------------+
+banner motd | This System is the property of Hilton Worldwide and is solely for  |
+banner motd | use by authorized users for official business purposes only.       |
+banner motd | Individuals using this System should have no expectation of        |
+banner motd | privacy and are subject to having all activities monitored and     |
+banner motd | recorded.  Use of this System evidences an express consent to such |
+banner motd | monitoring and agreement that if such monitoring reveals evidence  |
+banner motd | of possible abuse or criminal activity, System personnel may       |
+banner motd | provide the results of such monitoring to appropriate officials.   |
+banner motd +--------------------------------------------------------------------+
+boot system disk0:/asa9-16-4-57-lfbff-k8.SPA
+boot system disk0:/asa9-14-3-11-lfbff-k8.SPA
+boot system disk0:/asa9-14-2-15-lfbff-k8.SPA
+ftp mode passive
+dns domain-lookup inside
+dns server-group DefaultDNS
+ name-server 10.80.199.190 
+ name-server 10.80.199.192 
+ name-server 10.80.120.162 
+ name-server 10.72.120.126 
+ name-server 10.72.120.127 
+ domain-name hilton.com
+object network POS_server
+ host 172.22.79.10
+object network PMS_server
+ host 172.22.79.4
+object network POS_Terminals
+ range 10.122.103.23 10.122.103.50
+object network EMV_PIN_PADS
+ range 10.122.103.3 10.122.103.22
+object network snmp-servers-net
+ subnet 10.80.124.0 255.255.255.0
+object network Elavon-Atlanta-DC-198.203.191.0-24
+ subnet 198.203.191.0 255.255.255.0
+object network Elavon-CBC-DC-204.194.196.0-22
+ subnet 204.194.196.0 255.255.252.0
+object network Elavon-Knoxville-DC-198.203.192.0-24
+ subnet 198.203.192.0 255.255.255.0
+object network Elavon-LB-Range-216.235.176.0-20
+ subnet 216.235.176.0 255.255.240.0
+object network Elavon-OBC-DC-204.194.192.0-22
+ subnet 204.194.192.0 255.255.252.0
+object network snmp-servers-net-ftc
+ subnet 10.80.124.0 255.255.255.0
+object network snmp-servers-net-wtc
+ subnet 10.72.124.0 255.255.255.0
+object network 184.169.163.158
+ host 184.169.163.158
+object network 184.169.155.1
+ host 184.169.155.1
+object network 54.151.103.156
+ host 54.151.103.156
+object network 1foup01-b.cloudsink.com
+ fqdn 1foup01-b.cloudsink.com
+object network 54.151.121.185
+ host 54.151.121.185
+object network QualysScanSrvrs.hilton.com
+ fqdn QualysScanSrvrs.hilton.com
+object network GISDiscovery
+ subnet 10.109.48.32 255.255.255.224
+object network All_Manged_Hotel_subnet
+ subnet 10.122.0.0 255.255.0.0
+object network lfodown01-b.cloudsink.net
+ fqdn lfodown01-b.cloudsink.net
+object network lfoup01-b.cloudsink.net
+ fqdn lfoup01-b.cloudsink.net
+object network ts01-b.cloudsink.net
+ fqdn ts01-b.cloudsink.net
+object network OnQ_PMS_NAPVL_172.22.79.4
+ host 172.22.79.4
+object network PMS_Workstation_NAPVL_172.22.79.15_to_172.22.79.60
+ range 172.22.79.15 172.22.79.60
+object network POS_Interface_Server_NAPVL_172.22.79.10
+ host 172.22.79.10
+object network POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50
+ range 10.122.103.23 10.122.103.50
+object network POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50
+ range 10.122.103.23 10.122.103.50
+object network POS_Printer_KDS_NAPVL_10.122.103.40_to_10.122.103.50
+ range 10.122.103.40 10.122.103.50
+object network rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39
+ range 10.122.103.38 10.122.103.39
+object network Wireless_Pay_at_Table_Device_NAPVL_10.122.103.3_to_10.122.103.22
+ range 10.122.103.3 10.122.103.22
+object network POS_EMV_Pin_Pads_NAPVL_10.122.103.3_to_10.122.103.22
+ range 10.122.103.3 10.122.103.22
+object network POS_Terminal_Network_NAPVL_10.122.103.0_255.255.255.192
+ subnet 10.122.103.0 255.255.255.192
+object network Hilton_Admin_Network_NAPVL_172.22.79.0_255.255.255.192
+ subnet 172.22.79.0 255.255.255.192
+object service Agilysys_Managed_Revelation_LSS_tcp_7051
+ service tcp destination eq 7051 
+object service Agilysys_Managed_IG_Kitchen_Printer_Server_udp_7001
+ service udp destination eq 7001 
+object service Agilysys_Managed_IG_Item_Count_Down_tcp_7011
+ service tcp destination eq 7011 
+object service Agilysys_Managed_Inventory_Service_tcp_8136
+ service tcp destination eq 8136 
+object service Agilysys_Managed_Hilton_DNS_Servers_udp_53
+ service udp destination eq domain 
+object service Agilysys_Managed_IG_PMS_Log_Writer_tcp_7012
+ service tcp destination eq 7012 
+object service Agilysys_Managed_Pay_At_Table_Elavon_tcp_8502
+ service tcp destination eq 8502 
+object service Agilysys_Managed_Pay_At_Table_Pin_Pad_Elavon_tcp_6000
+ service tcp destination eq 6000 
+object service Agilysys_Managed_Pay_At_Table_Pin_Pad_Planet_3C_tcp_8080
+ service tcp destination eq 8080 
+object service Agilysys_Managed_Pay_At_Table_Adyen_tcp_8443
+ service tcp destination eq 8443 
+object service Agilysys_Managed_IG_Kiosk_Room_Charging_tcp_443
+ service tcp destination eq https 
+object service Agilysys_Managed_POS_Operations_tcp_443
+ service tcp destination eq https 
+object network fqdn_cdls.agilysys.com
+ fqdn cdls.agilysys.com
+object network fqdn_cdls.onagilysys.com
+ fqdn cdls.onagilysys.com
+object network fqdn_ig-cdn.onagilysys.com
+ fqdn ig-cdn.onagilysys.com
+object network fqdn_agysigprod01eastus.blob.core.windows.net
+ fqdn agysigprod01eastus.blob.core.windows.net
+object service Agilysys_Managed_CDLS_tcp_443
+ service tcp destination eq https 
+object network fqdn_ig.onagilysys.com
+ fqdn ig.onagilysys.com
+object network fqdn_ig.onagilysys.eu
+ fqdn ig.onagilysys.eu
+object network fqdn_ig.onagilysys.sg
+ fqdn ig.onagilysys.sg
+object network fqdn_ig-adminv3.onagilysys.sg
+ fqdn ig-adminv3.onagilysys.sg
+object network fqdn_ig-signalrposv3-prodseasia.service.signalr.net
+ fqdn ig-signalrposv3-prodseasia.service.signalr.net
+object service Agilysys_Managed_Nexus_Connection_tcp_443
+ service tcp destination eq https 
+object network fqdn_at1-rguest-ntp-1.rguest.com
+ fqdn at1-rguest-ntp-1.rguest.com
+object network fqdn_at1-rguest-ntp-2.rguest.com
+ fqdn at1-rguest-ntp-2.rguest.com
+object network fqdn_e-support.agilysys.com
+ fqdn e-support.agilysys.com
+object network fqdn_ig-sb01a.onagilysys.com
+ fqdn ig-sb01a.onagilysys.com
+object network fqdn_ig-sb01a.onagilysys.eu
+ fqdn ig-sb01a.onagilysys.eu
+object network fqdn_ig-sb01a.onagilysys.sg
+ fqdn ig-sb01a.onagilysys.sg
+object network fqdn_ig-servicebus-prodseasia.servicebus.windows.net
+ fqdn ig-servicebus-prodseasia.servicebus.windows.net
+object service Agilysys_Managed_Azure_Service_Bus_tcp_443
+ service tcp destination eq https 
+object service Agilysys_Managed_iOS_Updates_tcp_443
+ service tcp destination eq https 
+object network fqdn_play.google.com
+ fqdn play.google.com
+object service Agilysys_Managed_Android_Updates_tcp_443
+ service tcp destination eq https 
+object network fqdn_fuseboxtrant.elavon.net
+ fqdn fuseboxtrant.elavon.net
+object network fqdn_termupdate.elavon.net
+ fqdn termupdate.elavon.net
+object network fqdn_terminal.six-integra.com
+ fqdn terminal.six-integra.com
+object network fqdn_services.3cint.com
+ fqdn services.3cint.com
+object service Agilysys_Managed_Maintenance_Reverse_tcp_443
+ service tcp destination eq https 
+object network fqdn_maintenance.sixintegra.com
+ fqdn maintenance.sixintegra.com
+object service Agilysys_Managed_Firmware_SW_Updates_Planet_3C_tcp_22
+ service tcp destination eq ssh 
+object network fqdn_tms.3cint.com
+ fqdn tms.3cint.com
+object service Agilysys_Managed_Firmware_SW_Updates_Pay_at_Table_tcp_8953
+ service tcp destination eq 8953 
+object network fqdn_authorize.rguest.com
+ fqdn authorize.rguest.com
+object network fqdn_authorize.rguest.eu
+ fqdn authorize.rguest.eu
+object network fqdn_authorize.rguest.sg
+ fqdn authorize.rguest.sg
+object network fqdn_pay.rguest.com
+ fqdn pay.rguest.com
+object network fqdn_pgc.rguest.com
+ fqdn pgc.rguest.com
+object network fqdn_pgw.rguest.com
+ fqdn pgw.rguest.com
+object service Agilysys_Managed_IG_Quickpay_tcp_443
+ service tcp destination eq https 
+object service Agilysys_Managed_Credit_Card_Gateway_Adyen_tcp_443
+ service tcp destination eq https 
+object network fqdn_cnc-utils.rguest.com
+ fqdn cnc-utils.rguest.com
+object network fqdn_cnc-utils2.rguest.com
+ fqdn cnc-utils2.rguest.com
+object network fqdn_yum-utils.rguest.com
+ fqdn yum-utils.rguest.com
+object network fqdn_appl-utils.rguest.com
+ fqdn appl-utils.rguest.com
+object network fqdn_files-utils.rguest.com
+ fqdn files-utils.rguest.com
+object network fqdn_core.rguest.sg
+ fqdn core.rguest.sg
+object network fqdn_buy.rguest.sg
+ fqdn buy.rguest.sg
+object network fqdn_pay.rguest.sg
+ fqdn pay.rguest.sg
+object network fqdn_pgw.rguest.sg
+ fqdn pgw.rguest.sg
+object network fqdn_pgc.rguest.sg
+ fqdn pgc.rguest.sg
+object service Agilysys_Managed_IG_Kiosk_Operations_and_Administration_tcp_443
+ service tcp destination eq https 
+object service Agilysys_Managed_IG_Kitchen_Printer_Server_tcp_7025
+ service tcp destination eq 7025 
+object service Agilysys_Managed_IG_SMU_PTA_udp_8001
+ service udp destination eq 8001 
+object service Agilysys_Managed_IG_PMS_Interface_udp_6666
+ service udp destination eq 6666 
+object network Splunk_Cloud_Indexers
+ subnet 10.113.248.0 255.255.255.0
+object service Agilysys_Managed_Send_Data_to_Splunk_Indexers_tcp_9997
+ service tcp destination eq 9997 
+object service Agilysys_Managed_Talk_to_Deployment_Servers_tcp_8089
+ service tcp destination eq 8089 
+object network Global_Information_Security_1
+ host 10.80.1.20
+object network Global_Information_Security_2
+ subnet 10.88.164.0 255.255.255.0
+object network apple.com
+ subnet 17.0.0.0 255.0.0.0
+object network c9b9c31e925e202f-HiltonInc-pal-live.adyenpayments.com
+ fqdn c9b9c31e925e202f-HiltonInc-pal-live.adyenpayments.com
+object network c9b9c31e925e202f-HiltonInc-checkout-live.adyenpayments.com
+ fqdn c9b9c31e925e202f-HiltonInc-checkout-live.adyenpayments.com
+object network a7b66399a1de669a-HiltonInc-pal-live.adyenpayments.com
+ fqdn a7b66399a1de669a-HiltonInc-pal-live.adyenpayments.com
+object network a7b66399a1de669a-HiltonInc-checkout-live.adyenpayments.com
+ fqdn a7b66399a1de669a-HiltonInc-checkout-live.adyenpayments.com
+object network 3ca5b81b33320c94-HiltonInc-pal-live.adyenpayments.com
+ fqdn 3ca5b81b33320c94-HiltonInc-pal-live.adyenpayments.com
+object network 3ca5b81b33320c94-HiltonInc-checkout-live.adyenpayments.com
+ fqdn 3ca5b81b33320c94-HiltonInc-checkout-live.adyenpayments.com
+object network 87108f5d88ab2a8e-HiltonInc-pal-live.adyenpayments.com
+ fqdn 87108f5d88ab2a8e-HiltonInc-pal-live.adyenpayments.com
+object network 87108f5d88ab2a8e-HiltonInc-checkout-live.adyenpayments.com
+ fqdn 87108f5d88ab2a8e-HiltonInc-checkout-live.adyenpayments.com
+object network 8c4a2d4c704d97c6-HiltonInc-pal-live.adyenpayments.com
+ fqdn 8c4a2d4c704d97c6-HiltonInc-pal-live.adyenpayments.com
+object network 8c4a2d4c704d97c6-HiltonInc-checkout-live.adyenpayments.com
+ fqdn 8c4a2d4c704d97c6-HiltonInc-checkout-live.adyenpayments.com
+object network terminal-api-live.adyen.com
+ fqdn terminal-api-live.adyen.com
+object network postfmapi-live.adyen.com
+ fqdn postfmapi-live.adyen.com
+object network management-live.adyen.com
+ fqdn management-live.adyen.com
+object network ca-live.adyen.com
+ fqdn ca-live.adyen.com
+object network adyen.com
+ fqdn adyen.com
+object network out.adyen.com
+ fqdn out.adyen.com
+object-group network New_POS_Network
+ network-object 10.122.103.0 255.255.255.192
+object-group service POS_server_services
+ service-object tcp destination eq 7051 
+ service-object tcp destination eq 7001 
+ service-object udp destination eq 7001 
+ service-object tcp destination eq 7011 
+ service-object tcp destination eq 7015 
+ service-object tcp destination eq netbios-ssn 
+ service-object tcp destination eq 445 
+ service-object tcp destination eq 7016 
+ service-object tcp destination eq 7017 
+ service-object udp destination eq 6666 
+ service-object udp destination eq 7006 
+ service-object tcp destination eq 7012 
+ service-object tcp destination eq https 
+ service-object tcp destination eq 9100 
+ service-object udp destination eq 3289 
+ service-object tcp destination eq pop3 
+ service-object tcp destination eq 112 
+ service-object udp destination eq 114 
+ service-object udp destination eq 115 
+ service-object udp destination eq 32768 
+ service-object tcp destination eq 7008 
+ service-object tcp destination eq 8177 
+ service-object icmp 
+ service-object tcp destination eq 8502 
+ service-object tcp destination eq 32768 
+object-group service PMS_server_services
+ service-object udp destination eq domain 
+ service-object udp destination eq ntp 
+ service-object tcp destination eq 8192 
+ service-object tcp destination eq 8194 
+ service-object tcp destination eq 135 
+ service-object tcp destination eq pptp 
+ service-object tcp destination eq www 
+ service-object tcp destination eq 51234 
+ service-object tcp destination eq 8530 
+ service-object tcp destination eq 3268 
+ service-object tcp destination eq 3269 
+object-group network Datawire.net
+ network-object host 216.220.36.75
+ network-object host 205.167.140.10
+ network-object host 64.243.142.36
+ network-object host 206.112.91.167
+object-group network SAAS_SRVS
+ network-object 64.79.134.16 255.255.255.240
+ network-object 66.209.65.192 255.255.255.224
+ network-object 66.209.73.144 255.255.255.240
+ network-object 216.194.123.192 255.255.255.192
+ network-object host 3.123.139.180
+object-group service Agilysys.com-ports
+ service-object tcp destination eq https 
+ service-object tcp destination eq www 
+ service-object tcp destination eq 8200 
+object-group service Gift_card_services
+ service-object tcp destination eq https 
+ service-object tcp destination eq 5199 
+ service-object tcp destination eq 23001 
+object-group network Gift_card_hosts
+ network-object host 216.220.36.75
+ network-object host 205.167.140.10
+ network-object host 64.243.142.36
+ network-object host 206.112.91.167
+ network-object host 63.240.199.76
+object-group network Elavon_EMV
+ network-object host 198.203.192.20
+ network-object host 198.203.192.253
+ network-object host 198.203.191.116
+object-group network BMC_footprints
+ network-object host 216.194.123.195
+ network-object host 216.194.123.196
+ network-object host 216.194.123.197
+ network-object host 216.194.123.198
+ network-object host 216.194.123.230
+ network-object host 216.194.123.231
+ network-object host 216.194.123.232
+ network-object host 216.194.123.233
+ network-object host 216.194.123.234
+ network-object host 216.194.123.235
+object-group service POS_Terminal_services
+ service-object udp destination eq 7001 
+ service-object udp destination eq 7003 
+ service-object udp destination eq 6666 
+ service-object udp destination eq 3289 
+ service-object udp destination eq 8001 
+ service-object tcp destination range 32881 32883 
+ service-object tcp destination eq 3389 
+ service-object tcp destination eq 5002 
+ service-object tcp destination eq 9100 
+ service-object udp destination eq 10004 
+ service-object udp destination eq ntp 
+ service-object icmp 
+ service-object tcp destination eq sunrpc 
+ service-object tcp destination eq 112 
+ service-object udp destination eq 28672 
+ service-object tcp destination eq 32768 
+ service-object tcp destination range 32878 32880 
+ service-object tcp destination eq 32888 
+object-group service PMS_Terminal_services
+ service-object tcp-udp destination eq 445 
+ service-object tcp-udp destination eq 135 
+ service-object tcp destination eq 10123 
+ service-object tcp destination eq 2701 
+ service-object tcp destination eq www 
+ service-object tcp destination eq https 
+object-group network Qualys-scanners
+ description Jorgan Green Qualys-scanners
+ network-object host 10.80.47.114
+ network-object host 10.80.47.179
+ network-object host 10.80.47.178
+ network-object host 10.80.47.177
+ network-object host 10.80.47.115
+ network-object host 10.80.47.175
+ network-object host 10.80.47.186
+ network-object host 10.80.47.185
+ network-object host 10.80.47.184
+ network-object host 10.80.47.183
+ network-object host 10.80.47.182
+ network-object host 10.88.1.20
+ network-object 10.88.164.0 255.255.255.0
+object-group service Crowdstrike_Protocol
+ service-object tcp destination eq www 
+ service-object tcp destination eq https 
+ service-object icmp 
+object-group network GR-Qualys_service_vulnerability_scan
+ description Qualys service vulnerability scanning 
+ network-object 64.39.96.0 255.255.240.0
+ network-object 69.67.176.0 255.255.255.0
+ network-object 69.67.181.0 255.255.255.0
+ network-object 64.39.105.0 255.255.255.0
+object-group network Crowdstrike_hosts
+ network-object host 13.56.121.58
+ network-object host 13.56.127.239
+ network-object host 13.57.54.63
+ network-object host 50.18.194.39
+ network-object host 50.18.198.237
+ network-object host 52.52.117.52
+ network-object host 52.52.119.33
+ network-object host 52.52.149.168
+ network-object host 52.52.239.58
+ network-object host 52.53.77.89
+ network-object host 52.8.134.130
+ network-object host 52.8.141.1
+ network-object host 52.8.160.82
+ network-object host 52.8.172.89
+ network-object host 52.8.173.58
+ network-object host 52.8.19.75
+ network-object host 52.8.32.113
+ network-object host 52.8.45.162
+ network-object host 52.8.5.240
+ network-object host 52.8.52.230
+ network-object host 52.8.54.244
+ network-object host 52.8.61.206
+ network-object host 52.9.104.148
+ network-object host 52.9.212.176
+ network-object host 52.9.77.209
+ network-object host 52.9.82.94
+ network-object host 52.9.87.98
+ network-object host 54.183.105.3
+ network-object host 54.183.120.141
+ network-object host 54.183.122.156
+ network-object host 54.183.135.80
+ network-object host 54.183.140.32
+ network-object host 54.183.142.105
+ network-object host 54.183.148.116
+ network-object host 54.183.148.43
+ network-object host 54.183.215.154
+ network-object host 54.183.234.42
+ network-object host 54.183.24.162
+ network-object host 54.183.252.86
+ network-object host 54.183.28.214
+ network-object host 54.183.34.154
+ network-object host 54.183.39.68
+ network-object host 54.183.51.31
+ network-object host 54.183.51.69
+ network-object host 54.183.52.221
+ network-object host 54.193.117.199
+ network-object host 54.193.27.226
+ network-object host 54.193.29.47
+ network-object host 54.193.67.98
+ network-object host 54.193.86.245
+ network-object host 54.193.87.57
+ network-object host 54.193.90.171
+ network-object host 54.193.93.19
+ network-object host 54.215.131.232
+ network-object host 54.215.154.80
+ network-object host 54.215.169.199
+ network-object host 54.215.169.38
+ network-object host 54.215.170.42
+ network-object host 54.215.176.108
+ network-object host 54.215.183.157
+ network-object host 54.215.226.55
+ network-object host 54.219.112.243
+ network-object host 54.219.115.12
+ network-object host 54.219.137.54
+ network-object host 54.219.140.50
+ network-object host 54.219.141.250
+ network-object host 54.219.145.181
+ network-object host 54.219.147.253
+ network-object host 54.219.148.161
+ network-object host 54.219.149.89
+ network-object host 54.219.149.92
+ network-object host 54.219.151.1
+ network-object host 54.219.151.27
+ network-object host 54.219.153.248
+ network-object host 54.219.158.223
+ network-object host 54.219.158.53
+ network-object host 54.219.159.84
+ network-object host 54.219.161.141
+ network-object host 54.219.179.25
+ network-object host 54.241.138.180
+ network-object host 54.241.146.67
+ network-object host 54.241.148.127
+ network-object host 54.241.150.134
+ network-object host 54.241.161.242
+ network-object host 54.241.161.60
+ network-object host 54.241.162.180
+ network-object host 54.241.162.64
+ network-object host 54.241.164.212
+ network-object host 54.241.175.140
+ network-object host 54.241.175.52
+ network-object host 54.241.179.52
+ network-object host 54.241.181.242
+ network-object host 54.241.181.78
+ network-object host 54.241.182.78
+ network-object host 54.241.183.151
+ network-object host 54.241.183.229
+ network-object host 54.241.183.232
+ network-object host 54.241.184.161
+ network-object host 54.241.185.201
+ network-object host 54.241.186.124
+ network-object host 54.241.197.58
+ network-object host 54.67.105.202
+ network-object host 54.67.108.17
+ network-object host 54.67.114.188
+ network-object host 54.67.119.89
+ network-object host 54.67.122.238
+ network-object host 54.67.123.150
+ network-object host 54.67.123.234
+ network-object host 54.67.17.131
+ network-object host 54.67.24.156
+ network-object host 54.67.26.184
+ network-object host 54.67.33.233
+ network-object host 54.67.4.108
+ network-object host 54.67.41.192
+ network-object host 54.67.48.56
+ network-object host 54.67.5.136
+ network-object host 54.67.51.32
+ network-object host 54.67.54.116
+ network-object host 54.67.6.201
+ network-object host 54.67.68.88
+ network-object host 54.67.72.218
+ network-object host 54.67.78.134
+ network-object host 54.67.92.206
+ network-object host 54.67.96.255
+ network-object host 54.67.99.247
+ network-object object 1foup01-b.cloudsink.com
+ network-object object ts01-b.cloudsink.net
+ network-object object lfoup01-b.cloudsink.net
+ network-object object lfodown01-b.cloudsink.net
+ network-object host 54.151.103.156
+ network-object host 54.151.121.185
+ network-object host 184.169.155.1
+ network-object host 184.169.163.158
+ network-object host 13.56.225.158
+ network-object host 13.57.64.97
+ network-object host 13.57.84.142
+ network-object host 52.8.27.14
+ network-object host 52.8.212.212
+ network-object host 52.8.216.81
+ network-object host 52.9.7.10
+ network-object host 52.9.146.225
+ network-object host 54.67.47.58
+ network-object host 54.67.125.81
+ network-object host 54.177.119.54
+ network-object host 54.177.202.146
+ network-object host 54.183.24.211
+ network-object host 54.183.232.230
+ network-object host 54.193.33.135
+ network-object host 54.193.52.110
+ network-object host 54.215.96.32
+ network-object host 54.215.169.220
+ network-object host 54.215.177.122
+ network-object host 54.219.138.168
+ network-object host 54.241.48.136
+ network-object host 54.241.142.171
+ network-object host 54.241.149.173
+ network-object host 54.241.175.161
+ group-object GR-Qualys_service_vulnerability_scan
+object-group network group-Qualys-Scanners
+ network-object host 10.80.47.115
+ network-object host 10.80.47.177
+ network-object host 10.80.47.178
+ network-object host 10.80.47.179
+ network-object host 10.80.47.175
+ network-object host 10.80.47.176
+ network-object host 10.80.47.114
+ network-object host 10.80.202.170
+ network-object host 10.80.220.32
+object-group network All_Ame_properties
+ network-object 10.122.0.0 255.255.0.0
+object-group network code-neydA
+ description Credit card gateway neydA
+ network-object 85.184.230.0 255.255.255.0
+ network-object 85.184.231.0 255.255.255.0
+ network-object 135.84.148.0 255.255.252.0
+ network-object 147.12.16.0 255.255.252.0
+ network-object 85.184.228.0 255.255.252.0
+ network-object 147.12.20.0 255.255.252.0
+ network-object 82.199.87.128 255.255.255.192
+ network-object 82.199.90.136 255.255.255.248
+ network-object 82.199.90.160 255.255.255.224
+ network-object 91.212.42.0 255.255.255.0
+ network-object 213.52.172.0 255.255.255.128
+ network-object 193.67.130.0 255.255.255.0
+ network-object 64.74.138.0 255.255.255.0
+ network-object 66.199.8.0 255.255.255.128
+ network-object 135.84.148.0 255.255.255.0
+ network-object 135.84.149.0 255.255.255.0
+ network-object host 135.84.150.10
+ network-object host 135.84.150.11
+ network-object 185.101.196.0 255.255.252.0
+ network-object 185.101.197.0 255.255.255.0
+ network-object 185.101.198.0 255.255.255.0
+ network-object 62.146.248.0 255.255.248.0
+ network-object object terminal-api-live.adyen.com
+ network-object object postfmapi-live.adyen.com
+ network-object object management-live.adyen.com
+ network-object object ca-live.adyen.com
+ network-object object c9b9c31e925e202f-HiltonInc-pal-live.adyenpayments.com
+ network-object object c9b9c31e925e202f-HiltonInc-checkout-live.adyenpayments.com
+ network-object object a7b66399a1de669a-HiltonInc-pal-live.adyenpayments.com
+ network-object object a7b66399a1de669a-HiltonInc-checkout-live.adyenpayments.com
+ network-object object 8c4a2d4c704d97c6-HiltonInc-pal-live.adyenpayments.com
+ network-object object 8c4a2d4c704d97c6-HiltonInc-checkout-live.adyenpayments.com
+ network-object object 87108f5d88ab2a8e-HiltonInc-pal-live.adyenpayments.com
+ network-object object 87108f5d88ab2a8e-HiltonInc-checkout-live.adyenpayments.com
+ network-object object 3ca5b81b33320c94-HiltonInc-pal-live.adyenpayments.com
+ network-object object 3ca5b81b33320c94-HiltonInc-checkout-live.adyenpayments.com
+ network-object object out.adyen.com
+ network-object object adyen.com
+ network-object 147.12.16.0 255.255.240.0
+object-group service Elavon-Payment-Ports
+ service-object tcp destination eq 7000 
+ service-object tcp destination eq 6362 
+ service-object tcp destination eq https 
+ service-object tcp destination eq 7006 
+ service-object tcp destination eq 8400 
+ service-object tcp destination eq 7500 
+ service-object tcp destination eq 9557 
+ service-object tcp destination eq 450 
+ service-object tcp destination eq cifs 
+ service-object tcp destination eq 6423 
+object-group network new_elavon_subnets
+ network-object object Elavon-OBC-DC-204.194.192.0-22
+ network-object object Elavon-LB-Range-216.235.176.0-20
+ network-object object Elavon-Knoxville-DC-198.203.192.0-24
+ network-object object Elavon-CBC-DC-204.194.196.0-22
+ network-object object Elavon-Atlanta-DC-198.203.191.0-24
+object-group network qualys_hosts
+ network-object host 64.39.104.93
+object-group network Qualys_Gateway_Dest
+ network-object 10.109.60.0 255.255.255.128
+object-group network grp-scan-agents-pos-to-int
+ group-object qualys_hosts
+ group-object Crowdstrike_hosts
+ group-object Qualys_Gateway_Dest
+ group-object GR-Qualys_service_vulnerability_scan
+object-group service UDP_443
+ service-object udp destination eq 443 
+object-group service Qualys_Gateway_Ports
+ service-object tcp destination eq 1080 
+ service-object tcp destination eq 8080 
+object-group service grp-scan-agents-pos-to-int-port
+ group-object UDP_443
+ group-object Crowdstrike_Protocol
+ group-object Qualys_Gateway_Ports
+object-group network 10.122.0.0_16
+ description network 10.122.0.0_16
+ network-object 10.122.0.0 255.255.0.0
+object-group service Agilysys_Managed_IG_Kitchen_Printer_Server_tcp_7001_tcp_7025
+ service-object tcp destination eq 7001 
+ service-object tcp destination eq 7025 
+object-group service Agilysys_Managed_IG_PMS_Interface_tcp_all
+ service-object tcp destination eq 7015 
+ service-object tcp destination eq 7018 
+ service-object tcp destination eq netbios-ssn 
+ service-object tcp destination eq 445 
+ service-object tcp destination eq 7016 
+ service-object tcp destination eq 7017 
+object-group service Agilysys_Managed_IG_PMS_Interface_udp_all
+ service-object udp destination eq 6666 
+ service-object udp destination eq 7006 
+object-group service Agilysys_Managed_Notification_Service_tcp_8127_tcp_5000
+ service-object tcp destination eq 8127 
+ service-object tcp destination eq 5000 
+object-group network grp_Hilton_Hotel_DNS_Servers
+ network-object host 10.80.199.190
+ network-object host 10.80.199.192
+ network-object host 10.80.120.162
+object-group service Agilysys_Managed_Payment_Proxy_tcp_8133_and_tcp_8128
+ service-object tcp destination eq 8133 
+ service-object tcp destination eq 8128 
+object-group network grp_SaaS_App_Server_Hosts
+ network-object 64.79.134.16 255.255.255.240
+ network-object 66.209.65.192 255.255.255.224
+ network-object 66.209.73.144 255.255.255.240
+ network-object 216.194.123.192 255.255.255.192
+object-group network fqdn_Agilysys_Azure_CDLS_Datacenter
+ network-object object fqdn_cdls.agilysys.com
+ network-object object fqdn_cdls.onagilysys.com
+ network-object object fqdn_ig-cdn.onagilysys.com
+ network-object object fqdn_agysigprod01eastus.blob.core.windows.net
+object-group network fqdn_Agilysys_Nexus_Connection_Datacenter
+ network-object object fqdn_ig.onagilysys.com
+ network-object object fqdn_ig.onagilysys.eu
+ network-object object fqdn_ig.onagilysys.sg
+ network-object object fqdn_ig-adminv3.onagilysys.sg
+ network-object object fqdn_ig-signalrposv3-prodseasia.service.signalr.net
+object-group network fqdn_Agilysys_rGuest_NTP
+ network-object object fqdn_at1-rguest-ntp-1.rguest.com
+ network-object object fqdn_at1-rguest-ntp-2.rguest.com
+object-group service Agilysys_Managed_Time_Synch_tcp_443_udp_123
+ service-object tcp destination eq https 
+ service-object udp destination eq ntp 
+object-group service Agilysys_Managed_Remote_Support_tcp_80_tcp_443_tcp_8200
+ service-object tcp destination eq www 
+ service-object tcp destination eq https 
+ service-object tcp destination eq 8200 
+object-group network fqdn_Agilysys_Azure_Service_Bus_Datacenter
+ network-object object fqdn_ig-sb01a.onagilysys.com
+ network-object object fqdn_ig-sb01a.onagilysys.eu
+ network-object object fqdn_ig-sb01a.onagilysys.sg
+ network-object object fqdn_ig-servicebus-prodseasia.servicebus.windows.net
+object-group network grp_fuseboxtrant.elavon.net
+ network-object object fqdn_fuseboxtrant.elavon.net
+ network-object object fqdn_termupdate.elavon.net
+ network-object 198.203.191.0 255.255.255.0
+ network-object 198.203.192.0 255.255.255.0
+ network-object 204.194.192.0 255.255.252.0
+ network-object 204.194.196.0 255.255.252.0
+ network-object 216.235.176.0 255.255.240.0
+object-group service Agilysys_Managed_Elavon_Credit_Card_Processing_tcp_all
+ service-object tcp destination eq 450 
+ service-object tcp destination eq cifs 
+ service-object tcp destination eq 6423 
+ service-object tcp destination eq 7000 
+object-group network grp_terminal.six-integra.com
+ network-object object fqdn_terminal.six-integra.com
+ network-object host 194.7.129.148
+object-group service Agilysys_Managed_Authorization_Control_tcp_12327_and_tcp_12328
+ service-object tcp destination eq 12327 
+ service-object tcp destination eq 12328 
+object-group network grp_services.3cint.com
+ network-object object fqdn_services.3cint.com
+ network-object host 194.7.129.142
+object-group network grp-maintenance.sixintegra.com
+ network-object object fqdn_maintenance.sixintegra.com
+ network-object host 217.31.76.139
+object-group network grp-tms.3cint.com
+ network-object object fqdn_tms.3cint.com
+ network-object host 194.7.129.134
+object-group network grp_autorize.rguest.com
+ network-object object fqdn_authorize.rguest.com
+ network-object object fqdn_authorize.rguest.eu
+ network-object object fqdn_authorize.rguest.sg
+ network-object object fqdn_pay.rguest.com
+ network-object object fqdn_pgc.rguest.com
+ network-object object fqdn_pgw.rguest.com
+ network-object host 40.83.20.217
+ network-object host 104.42.78.163
+object-group network grp_utils.rguest.com
+ network-object object fqdn_cnc-utils.rguest.com
+ network-object object fqdn_cnc-utils2.rguest.com
+ network-object object fqdn_yum-utils.rguest.com
+ network-object object fqdn_appl-utils.rguest.com
+ network-object object fqdn_files-utils.rguest.com
+ network-object host 40.69.137.203
+ network-object host 52.176.109.43
+ network-object host 40.69.141.208
+object-group service Agilysys_Managed_IG_Kiosk_Operations_and_Admin_tcp_80_tcp_443
+ service-object tcp destination eq www 
+ service-object tcp destination eq https 
+object-group network grp_rguest.com
+ network-object object fqdn_core.rguest.sg
+ network-object object fqdn_buy.rguest.sg
+ network-object object fqdn_pay.rguest.sg
+ network-object object fqdn_pgw.rguest.sg
+ network-object object fqdn_pgc.rguest.sg
+ network-object host 52.187.67.193
+ network-object host 40.65.181.61
+ network-object host 40.65.180.252
+object-group service Agilysys_Managed_ICMP
+ service-object icmp 
+ service-object icmp echo
+ service-object icmp echo-reply
+ service-object icmp time-exceeded
+ service-object icmp unreachable
+ service-object icmp traceroute
+object-group service Agilysys_Managed_IG_Kitchen_Printer_Server_udp_7001_udp_7003
+ service-object udp destination eq 7001 
+ service-object udp destination eq 7003 
+object-group service Agilysys_Managed_IG_Kitchen_Printer_Server_tcp_9100_udp_3289
+ service-object tcp destination eq 9100 
+ service-object udp destination eq 3289 
+object-group network grp_Crowdstrike
+ network-object host 54.183.148.116
+ network-object host 54.215.176.108
+ network-object host 54.67.99.247
+ network-object host 54.193.29.47
+ network-object host 54.183.51.69
+ network-object host 54.183.39.68
+ network-object host 52.8.54.244
+ network-object host 54.67.105.202
+ network-object host 54.241.161.60
+ network-object host 52.8.160.82
+ network-object host 52.8.52.230
+ network-object host 52.8.61.206
+ network-object host 52.8.32.113
+ network-object host 52.8.172.89
+ network-object host 54.183.148.43
+ network-object host 54.193.90.171
+ network-object host 54.215.131.232
+ network-object host 54.193.117.199
+ network-object host 54.241.150.134
+ network-object host 52.8.45.162
+ network-object host 54.219.145.181
+ network-object host 54.183.34.154
+ network-object host 54.193.67.98
+ network-object host 54.193.27.226
+ network-object host 54.215.169.199
+ network-object host 54.183.24.162
+ network-object host 54.67.123.150
+ network-object host 54.67.96.255
+ network-object host 54.183.252.86
+ network-object host 54.183.122.156
+ network-object host 54.183.234.42
+ network-object host 52.8.173.58
+ network-object host 54.241.181.78
+ network-object host 54.193.86.245
+ network-object host 54.219.179.25
+ network-object host 50.18.198.237
+ network-object host 54.67.17.131
+ network-object host 54.67.72.218
+ network-object host 54.67.24.156
+ network-object host 54.67.4.108
+ network-object host 54.67.78.134
+ network-object host 54.241.183.229
+ network-object host 54.183.215.154
+ network-object host 54.241.183.151
+ network-object host 54.241.182.78
+ network-object host 54.241.161.242
+ network-object host 54.183.28.214
+ network-object host 54.219.158.223
+ network-object host 54.67.122.238
+ network-object host 54.67.114.188
+ network-object host 54.241.183.232
+ network-object host 54.67.51.32
+ network-object host 54.67.41.192
+ network-object host 54.67.108.17
+ network-object host 54.215.170.42
+ network-object host 54.67.5.136
+object-group service Agilysys_Managed_Crowdstrike_tcp_80_and_tcp_443
+ service-object tcp destination eq www 
+ service-object tcp destination eq https 
+object-group service Agilysys_Managed_Sophos_tcp_8192_and_tcp_8194
+ service-object tcp destination eq 8192 
+ service-object tcp destination eq 8194 
+object-group service Agilysys_Managed_Hilton_Windows_Updates_tcp_all
+ service-object tcp destination eq 135 
+ service-object tcp destination eq pptp 
+ service-object tcp destination eq www 
+ service-object tcp destination eq 51234 
+ service-object tcp destination eq 8530 
+object-group network grp-Data_Center_Deployment_Server_VIP
+ network-object host 10.80.199.171
+ network-object host 10.80.199.172
+object-group service Agilysys_Managed_Global_Catalog_DC_tcp_3268_and_tcp_3269
+ service-object tcp destination eq 3268 
+ service-object tcp destination eq 3269 
+access-list New_POS_VLAN remark CHG0296539 Revelation LSS Data Collection Point from Workstation 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Revelation_LSS_tcp_7051 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Revelation_LSS_tcp_7051 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Revelation_LSS_tcp_7051 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Revelation_LSS_tcp_7051 object POS_Printer_KDS_NAPVL_10.122.103.40_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN remark CHG0296539 IG - Kitchen Printer Server 04/17/2025
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_IG_Kitchen_Printer_Server_tcp_7001_tcp_7025 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_IG_Kitchen_Printer_Server_udp_7001 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_IG_Kitchen_Printer_Server_tcp_7001_tcp_7025 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_IG_Kitchen_Printer_Server_udp_7001 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_IG_Kitchen_Printer_Server_tcp_7001_tcp_7025 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_IG_Kitchen_Printer_Server_udp_7001 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_IG_Kitchen_Printer_Server_tcp_7001_tcp_7025 object POS_Printer_KDS_NAPVL_10.122.103.40_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_IG_Kitchen_Printer_Server_udp_7001 object POS_Printer_KDS_NAPVL_10.122.103.40_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN remark CHG0296539 IG - Item Count Down Server 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_IG_Item_Count_Down_tcp_7011 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_IG_Item_Count_Down_tcp_7011 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_IG_Item_Count_Down_tcp_7011 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_IG_Item_Count_Down_tcp_7011 object POS_Printer_KDS_NAPVL_10.122.103.40_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN remark CHG0296539 Inventory Service 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Inventory_Service_tcp_8136 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Inventory_Service_tcp_8136 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Inventory_Service_tcp_8136 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN remark CHG0296539 IG - SMU 04/17/2025
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_IG_PMS_Interface_tcp_all object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_IG_PMS_Interface_udp_all object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_IG_PMS_Interface_tcp_all object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_IG_PMS_Interface_udp_all object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_IG_PMS_Interface_tcp_all object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_IG_PMS_Interface_udp_all object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_IG_PMS_Interface_tcp_all object POS_Printer_KDS_NAPVL_10.122.103.40_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_IG_PMS_Interface_udp_all object POS_Printer_KDS_NAPVL_10.122.103.40_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN remark CHG0296539 Notification Service and Restful Dispatcher 04/17/2025
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Notification_Service_tcp_8127_tcp_5000 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Notification_Service_tcp_8127_tcp_5000 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Notification_Service_tcp_8127_tcp_5000 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN remark CHG0296539 Hilton DNS Servers 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Hilton_DNS_Servers_udp_53 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object OnQ_PMS_NAPVL_172.22.79.4 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Hilton_DNS_Servers_udp_53 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object-group grp_Hilton_Hotel_DNS_Servers log 
+access-list New_POS_VLAN remark CHG0296539 IG - PMS Log Writer 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_IG_PMS_Log_Writer_tcp_7012 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_IG_PMS_Log_Writer_tcp_7012 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_IG_PMS_Log_Writer_tcp_7012 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN remark CHG0296539 Agilysys Pay Pay At Table Elavon 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Pay_At_Table_Elavon_tcp_8502 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Pay_At_Table_Elavon_tcp_8502 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Pay_At_Table_Elavon_tcp_8502 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN remark CHG0296539 Agilysys Pay Pay At Table Pin Pad Elavon 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Pay_At_Table_Pin_Pad_Elavon_tcp_6000 object POS_EMV_Pin_Pads_NAPVL_10.122.103.3_to_10.122.103.22 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN remark CHG0296539 Agilysys Pay Pay At Table Pin Pad Planet 3C 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Pay_At_Table_Pin_Pad_Planet_3C_tcp_8080 object POS_EMV_Pin_Pads_NAPVL_10.122.103.3_to_10.122.103.22 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN remark CHG0296539 Agilysys Pay Pay At Table Adyen 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Pay_At_Table_Adyen_tcp_8443 object POS_EMV_Pin_Pads_NAPVL_10.122.103.3_to_10.122.103.22 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Pay_At_Table_Adyen_tcp_8443 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Pay_At_Table_Adyen_tcp_8443 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Pay_At_Table_Adyen_tcp_8443 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN remark CHG0296539 Payment Proxy 04/17/2025
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Payment_Proxy_tcp_8133_and_tcp_8128 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Payment_Proxy_tcp_8133_and_tcp_8128 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Payment_Proxy_tcp_8133_and_tcp_8128 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN remark CHG0296539 IG Kiosk Room Charging 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_IG_Kiosk_Room_Charging_tcp_443 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object POS_Interface_Server_NAPVL_172.22.79.10 log 
+access-list New_POS_VLAN remark CHG0296539 POS Operations 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_POS_Operations_tcp_443 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object-group grp_SaaS_App_Server_Hosts log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_POS_Operations_tcp_443 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object-group grp_SaaS_App_Server_Hosts log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_POS_Operations_tcp_443 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object-group grp_SaaS_App_Server_Hosts log 
+access-list New_POS_VLAN remark CHG0296539 CDLS Download the Pods from Azure to Mothership Interface 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_CDLS_tcp_443 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object-group fqdn_Agilysys_Azure_CDLS_Datacenter log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_CDLS_tcp_443 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object-group fqdn_Agilysys_Azure_CDLS_Datacenter log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_CDLS_tcp_443 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object-group fqdn_Agilysys_Azure_CDLS_Datacenter log 
+access-list New_POS_VLAN remark CHG0296539 Nexus Connection and POS API Auto Sync 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Nexus_Connection_tcp_443 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object-group fqdn_Agilysys_Nexus_Connection_Datacenter log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Nexus_Connection_tcp_443 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object-group fqdn_Agilysys_Nexus_Connection_Datacenter log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Nexus_Connection_tcp_443 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object-group fqdn_Agilysys_Nexus_Connection_Datacenter log 
+access-list New_POS_VLAN remark CHG0296539 NTP Time Synch 04/17/2025
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Time_Synch_tcp_443_udp_123 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object-group fqdn_Agilysys_rGuest_NTP log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Time_Synch_tcp_443_udp_123 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object-group fqdn_Agilysys_rGuest_NTP log 
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Time_Synch_tcp_443_udp_123 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object-group fqdn_Agilysys_rGuest_NTP log 
+access-list New_POS_VLAN remark CHG0296539 Remote Support Access Bomgar 04/17/2025
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Remote_Support_tcp_80_tcp_443_tcp_8200 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object fqdn_e-support.agilysys.com log 
+access-list New_POS_VLAN remark CHG0296539 Azure Service Bus 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Azure_Service_Bus_tcp_443 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 object-group fqdn_Agilysys_Azure_Service_Bus_Datacenter log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Azure_Service_Bus_tcp_443 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object-group fqdn_Agilysys_Azure_Service_Bus_Datacenter log 
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Azure_Service_Bus_tcp_443 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object-group fqdn_Agilysys_Azure_Service_Bus_Datacenter log 
+access-list New_POS_VLAN remark CHG0296539 iOS Updates and Patches 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_iOS_Updates_tcp_443 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object apple.com log 
+access-list New_POS_VLAN remark CHG0296539 Android Updates and Patches 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Android_Updates_tcp_443 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 object fqdn_play.google.com log 
+access-list New_POS_VLAN remark CHG0296539 Elavon Credit Card Processing and Firmware Updates 04/17/2025
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Elavon_Credit_Card_Processing_tcp_all object POS_EMV_Pin_Pads_NAPVL_10.122.103.3_to_10.122.103.22 object-group grp_fuseboxtrant.elavon.net log 
+access-list New_POS_VLAN remark CHG0296539 Authorization and Control 3C Pay At Table 04/17/2025
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Authorization_Control_tcp_12327_and_tcp_12328 object POS_EMV_Pin_Pads_NAPVL_10.122.103.3_to_10.122.103.22 object-group grp_terminal.six-integra.com log 
+access-list New_POS_VLAN remark CHG0296539 Maintenance Reverse SSH 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Maintenance_Reverse_tcp_443 object POS_EMV_Pin_Pads_NAPVL_10.122.103.3_to_10.122.103.22 object-group grp_services.3cint.com log 
+access-list New_POS_VLAN remark CHG0296539 Firmware SW Updates Initialization Planet 3C 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Firmware_SW_Updates_Planet_3C_tcp_22 object POS_EMV_Pin_Pads_NAPVL_10.122.103.3_to_10.122.103.22 object-group grp-maintenance.sixintegra.com log 
+access-list New_POS_VLAN remark CHG0296539 Firmware SW Updates Initialization Pay At Table 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Firmware_SW_Updates_Pay_at_Table_tcp_8953 object POS_EMV_Pin_Pads_NAPVL_10.122.103.3_to_10.122.103.22 object-group grp-tms.3cint.com log 
+access-list New_POS_VLAN remark CHG0296539 IG Quickpay 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_IG_Quickpay_tcp_443 object POS_Terminal_Network_NAPVL_10.122.103.0_255.255.255.192 object-group grp_autorize.rguest.com log 
+access-list New_POS_VLAN remark CHG0296539 Credit Card Gateway Adyen 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Credit_Card_Gateway_Adyen_tcp_443 object POS_EMV_Pin_Pads_NAPVL_10.122.103.3_to_10.122.103.22 object-group code-neydA log 
+access-list New_POS_VLAN remark CHG0296539 IG Kiosk Operations and Administration 04/17/2025
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_IG_Kiosk_Operations_and_Admin_tcp_80_tcp_443 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object-group grp_utils.rguest.com log 
+access-list New_POS_VLAN remark CHG0296539 Agilysys IG Kiosk Operations and Administration 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_IG_Kiosk_Operations_and_Administration_tcp_443 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 object-group grp_rguest.com log 
+access-list New_POS_VLAN remark CHG0296539 Agilysys Troubleshooting ICMP to Hilton Admin Network 04/17/2025
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_ICMP object POS_Terminal_Network_NAPVL_10.122.103.0_255.255.255.192 object Hilton_Admin_Network_NAPVL_172.22.79.0_255.255.255.192 log 
+access-list New_POS_VLAN remark CHG0296539 Crowdstrike 04/17/2025
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Crowdstrike_tcp_80_and_tcp_443 object POS_Terminal_Network_NAPVL_10.122.103.0_255.255.255.192 object-group grp_Crowdstrike log 
+access-list New_POS_VLAN remark CHG0296539 Sophos Anti Virus Updates 04/17/2025
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Sophos_tcp_8192_and_tcp_8194 object POS_Terminal_Network_NAPVL_10.122.103.0_255.255.255.192 object OnQ_PMS_NAPVL_172.22.79.4 log 
+access-list New_POS_VLAN remark CHG0296539 Hilton Windows Updates 04/17/2025
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Hilton_Windows_Updates_tcp_all object POS_Terminal_Network_NAPVL_10.122.103.0_255.255.255.192 object OnQ_PMS_NAPVL_172.22.79.4 log 
+access-list New_POS_VLAN remark CHG0296539 Splunk Cloud Indexers 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Send_Data_to_Splunk_Indexers_tcp_9997 object POS_Terminal_Network_NAPVL_10.122.103.0_255.255.255.192 object Splunk_Cloud_Indexers log 
+access-list New_POS_VLAN remark CHG0296539 Data Center and Property Deployment Servers VIP 04/17/2025
+access-list New_POS_VLAN extended permit object Agilysys_Managed_Talk_to_Deployment_Servers_tcp_8089 object POS_Terminal_Network_NAPVL_10.122.103.0_255.255.255.192 object-group grp-Data_Center_Deployment_Server_VIP log 
+access-list New_POS_VLAN remark CHG0296539 Global Catalog Domain Controller 04/17/2025
+access-list New_POS_VLAN extended permit object-group Agilysys_Managed_Global_Catalog_DC_tcp_3268_and_tcp_3269 object POS_Terminal_Network_NAPVL_10.122.103.0_255.255.255.192 object OnQ_PMS_NAPVL_172.22.79.4 log 
+access-list New_POS_VLAN remark RITM2682038 Access from 10.122.0.0_16 to 10.109.60.0-10.109.60.96 Qualys Gateway service 30/10/2024
+access-list New_POS_VLAN remark CHG0188001 new Credit Card  Gateway for POS systems 06/11/2021
+access-list New_POS_VLAN extended permit tcp object-group All_Ame_properties object-group code-neydA eq https log 
+access-list New_POS_VLAN remark CHG0134158 : Initiative from GIS to install Qualysand crowdstrike : 5/6/2020
+access-list New_POS_VLAN extended permit object-group Crowdstrike_Protocol 10.122.0.0 255.255.0.0 object-group Crowdstrike_hosts log 
+access-list New_POS_VLAN remark RITM0430882:EMV pin pads to connect BMC footprints.10/30/19
+access-list New_POS_VLAN extended permit tcp object EMV_PIN_PADS object-group BMC_footprints eq https log 
+access-list New_POS_VLAN remark RITM0430882:EMV pin pads to connect credit card gateways.10/30/19
+access-list New_POS_VLAN extended permit tcp object EMV_PIN_PADS object POS_server eq 6000 log 
+access-list New_POS_VLAN extended permit object-group Elavon-Payment-Ports object EMV_PIN_PADS object-group new_elavon_subnets log 
+access-list New_POS_VLAN remark RITM0430882:POS terminals to connect Starbucks ValuLink Gift Card Interface.10/30/19
+access-list New_POS_VLAN extended permit object-group Gift_card_services object POS_Terminals object-group Gift_card_hosts log 
+access-list New_POS_VLAN remark RITM0430882:POS access to Agilysys.com:10/30/19
+access-list New_POS_VLAN extended permit object-group Agilysys.com-ports object POS_Terminals host 199.33.128.108 log 
+access-list New_POS_VLAN remark RITM0430882:POS access to SAAS servers:10/30/19
+access-list New_POS_VLAN extended permit tcp object POS_Terminals object-group SAAS_SRVS eq https log 
+access-list New_POS_VLAN remark RITM0430882:Starbucks ValuLink Gift Card Interface8/5/19 
+access-list New_POS_VLAN extended permit tcp object-group New_POS_Network object-group Datawire.net eq https log 
+access-list New_POS_VLAN extended permit tcp object-group New_POS_Network host 10.80.199.172 eq 8089 log 
+access-list New_POS_VLAN extended permit tcp object-group New_POS_Network host 10.80.199.171 eq 8089 log 
+access-list New_POS_VLAN extended permit tcp object-group New_POS_Network 10.113.248.0 255.255.255.0 eq 9997 log 
+access-list New_POS_VLAN extended permit tcp object-group New_POS_Network 3.211.241.128 255.255.255.128 eq 9997 log 
+access-list New_POS_VLAN extended permit object-group PMS_server_services object-group New_POS_Network object PMS_server log 
+access-list New_POS_VLAN remark RITM0430882: PMS server to connect new pos network.10/30/19
+access-list New_POS_VLAN remark RITM0430882 POS Network to connect POS server.10/30/19
+access-list New_POS_VLAN extended permit object-group POS_server_services object-group New_POS_Network object POS_server log 
+access-list New_POS_VLAN remark CHG0276524 Qualys 08/17/2024
+access-list New_POS_VLAN extended permit object-group grp-scan-agents-pos-to-int-port object All_Manged_Hotel_subnet object-group grp-scan-agents-pos-to-int log 
+access-list New_POS_VLAN extended deny ip any any log 
+access-list inside remark *** CHG0270998 Qualys-Scanner ACL should be on TOP 6/14/2024***
+access-list inside extended permit ip object QualysScanSrvrs.hilton.com any4 
+access-list inside remark CHG0274556 Qualys-Scanner 07/23/2024
+access-list inside extended permit ip object GISDiscovery any4 
+access-list inside remark *** RITM0762516 Qualys Scanner access that will simplify updating rules in the futurer**
+access-list inside extended permit ip object-group group-Qualys-Scanners any4 log 
+access-list inside remark RITM0430882: To allow Qualys scanners to reach the 10.122 network.10/30/19
+access-list inside extended permit ip object-group Qualys-scanners object-group New_POS_Network log 
+access-list inside remark CHG0296539 IG - Kitchen Printer Server 04/17/2025
+access-list inside extended permit object Agilysys_Managed_IG_Kitchen_Printer_Server_tcp_7025 object POS_Interface_Server_NAPVL_172.22.79.10 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 log 
+access-list inside extended permit object-group Agilysys_Managed_IG_Kitchen_Printer_Server_udp_7001_udp_7003 object POS_Interface_Server_NAPVL_172.22.79.10 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 log 
+access-list inside extended permit object Agilysys_Managed_IG_Kitchen_Printer_Server_tcp_7025 object POS_Interface_Server_NAPVL_172.22.79.10 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 log 
+access-list inside extended permit object-group Agilysys_Managed_IG_Kitchen_Printer_Server_udp_7001_udp_7003 object POS_Interface_Server_NAPVL_172.22.79.10 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 log 
+access-list inside extended permit object Agilysys_Managed_IG_Kitchen_Printer_Server_tcp_7025 object POS_Interface_Server_NAPVL_172.22.79.10 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 log 
+access-list inside extended permit object-group Agilysys_Managed_IG_Kitchen_Printer_Server_udp_7001_udp_7003 object POS_Interface_Server_NAPVL_172.22.79.10 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 log 
+access-list inside extended permit object Agilysys_Managed_IG_Kitchen_Printer_Server_tcp_7025 object POS_Interface_Server_NAPVL_172.22.79.10 object POS_Printer_KDS_NAPVL_10.122.103.40_to_10.122.103.50 log 
+access-list inside extended permit object-group Agilysys_Managed_IG_Kitchen_Printer_Server_udp_7001_udp_7003 object POS_Interface_Server_NAPVL_172.22.79.10 object POS_Printer_KDS_NAPVL_10.122.103.40_to_10.122.103.50 log 
+access-list inside remark CHG0296539 IG - SMU PTA 04/17/2025
+access-list inside extended permit object Agilysys_Managed_IG_SMU_PTA_udp_8001 object POS_Interface_Server_NAPVL_172.22.79.10 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 log 
+access-list inside extended permit object Agilysys_Managed_IG_SMU_PTA_udp_8001 object POS_Interface_Server_NAPVL_172.22.79.10 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 log 
+access-list inside extended permit object Agilysys_Managed_IG_SMU_PTA_udp_8001 object POS_Interface_Server_NAPVL_172.22.79.10 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 log 
+access-list inside extended permit object Agilysys_Managed_IG_SMU_PTA_udp_8001 object POS_Interface_Server_NAPVL_172.22.79.10 object POS_Printer_KDS_NAPVL_10.122.103.40_to_10.122.103.50 log 
+access-list inside remark CHG0296539 Kitchen Printing 04/17/2025
+access-list inside extended permit object-group Agilysys_Managed_IG_Kitchen_Printer_Server_tcp_9100_udp_3289 object POS_Interface_Server_NAPVL_172.22.79.10 object POS_Printer_KDS_NAPVL_10.122.103.40_to_10.122.103.50 log 
+access-list inside remark CHG0296539 IG - PMS Interface Charging 04/17/2025
+access-list inside extended permit object Agilysys_Managed_IG_PMS_Interface_udp_6666 object POS_Interface_Server_NAPVL_172.22.79.10 object POS_Workstation_NAPVL_10.122.103.23_to_10.122.103.50 log 
+access-list inside extended permit object Agilysys_Managed_IG_PMS_Interface_udp_6666 object POS_Interface_Server_NAPVL_172.22.79.10 object POS_Tablet_NAPVL_10.122.103.23_to_10.122.103.50 log 
+access-list inside extended permit object Agilysys_Managed_IG_PMS_Interface_udp_6666 object POS_Interface_Server_NAPVL_172.22.79.10 object rGuest_Buy_VM_Appliance_NAPVL_10.122.103.38_to_10.122.103.39 log 
+access-list inside extended permit object Agilysys_Managed_IG_PMS_Interface_udp_6666 object POS_Interface_Server_NAPVL_172.22.79.10 object POS_Printer_KDS_NAPVL_10.122.103.40_to_10.122.103.50 log 
+access-list inside remark CHG0296539 Agilysys Pay Pay At Table Adyen 04/17/2025
+access-list inside extended permit object Agilysys_Managed_Pay_At_Table_Adyen_tcp_8443 object POS_Interface_Server_NAPVL_172.22.79.10 object POS_EMV_Pin_Pads_NAPVL_10.122.103.3_to_10.122.103.22 log 
+access-list inside remark CHG0296539 Agilysys Troubleshooting ICMP to POS Terminal Network 04/17/2025
+access-list inside extended permit object-group Agilysys_Managed_ICMP object Hilton_Admin_Network_NAPVL_172.22.79.0_255.255.255.192 object POS_Terminal_Network_NAPVL_10.122.103.0_255.255.255.192 log 
+access-list inside remark CHG0296539 Global Information Security Tools 04/17/2025
+access-list inside extended permit ip object Global_Information_Security_1 object POS_Terminal_Network_NAPVL_10.122.103.0_255.255.255.192 log 
+access-list inside remark CHG0296539 Global Information Security Tools 2 04/17/2025
+access-list inside extended permit ip object Global_Information_Security_2 object POS_Terminal_Network_NAPVL_10.122.103.0_255.255.255.192 log 
+access-list inside remark RITM0430882:POS terminal to connect new POS network.10/30/19
+access-list inside extended permit tcp object POS_server object EMV_PIN_PADS eq 6000 log 
+access-list inside extended permit object-group PMS_Terminal_services object PMS_server object-group New_POS_Network log 
+access-list inside extended permit object-group POS_Terminal_services object POS_server object-group New_POS_Network log 
+access-list inside extended deny ip any any log 
+access-list dcerpc remark CHG0296539 SCCM and Push Updates 04/17/2025
+access-list dcerpc extended permit tcp object OnQ_PMS_NAPVL_172.22.79.4 object POS_Interface_Server_NAPVL_172.22.79.10 eq 445 log 
+access-list dcerpc extended permit udp object OnQ_PMS_NAPVL_172.22.79.4 object POS_Interface_Server_NAPVL_172.22.79.10 eq 445 log 
+access-list dcerpc extended permit tcp object OnQ_PMS_NAPVL_172.22.79.4 object POS_Interface_Server_NAPVL_172.22.79.10 eq 135 log 
+access-list dcerpc extended permit udp object OnQ_PMS_NAPVL_172.22.79.4 object POS_Interface_Server_NAPVL_172.22.79.10 eq 135 log 
+access-list dcerpc extended permit tcp object OnQ_PMS_NAPVL_172.22.79.4 object POS_Interface_Server_NAPVL_172.22.79.10 eq 10123 log 
+access-list dcerpc extended permit tcp object OnQ_PMS_NAPVL_172.22.79.4 object POS_Interface_Server_NAPVL_172.22.79.10 eq 2701 log 
+access-list dcerpc extended permit tcp object OnQ_PMS_NAPVL_172.22.79.4 object POS_Interface_Server_NAPVL_172.22.79.10 eq www log 
+access-list dcerpc extended permit tcp object OnQ_PMS_NAPVL_172.22.79.4 object POS_Interface_Server_NAPVL_172.22.79.10 eq https log 
+pager lines 24
+logging enable
+logging timestamp
+logging buffer-size 64000
+logging buffered informational
+logging trap informational
+logging history notifications
+logging asdm informational
+logging host inside 10.85.199.4
+mtu New_POS_VLAN 1500
+mtu inside 1500
+ip verify reverse-path interface New_POS_VLAN
+ip verify reverse-path interface inside
+no failover
+no failover wait-disable
+monitor-interface New_POS_VLAN
+monitor-interface inside
+no monitor-interface service-module 
+icmp unreachable rate-limit 1 burst-size 1
+icmp permit any echo-reply inside
+icmp permit any inside
+no asdm history enable
+arp timeout 14400
+no arp permit-nonconnected
+arp rate-limit 16384
+access-group New_POS_VLAN in interface New_POS_VLAN
+access-group inside in interface inside
+route inside 0.0.0.0 0.0.0.0 172.22.79.1 1
+timeout xlate 3:00:00
+timeout pat-xlate 0:00:30
+timeout conn 1:00:00 half-closed 0:10:00 udp 0:02:00 sctp 0:02:00 icmp 0:00:02
+timeout sunrpc 0:10:00 h323 0:05:00 h225 1:00:00 mgcp 0:05:00 mgcp-pat 0:05:00
+timeout sip 0:30:00 sip_media 0:02:00 sip-invite 0:03:00 sip-disconnect 0:02:00
+timeout sip-provisional-media 0:02:00 uauth 0:05:00 absolute
+timeout tcp-proxy-reassembly 0:01:00
+timeout floating-conn 0:00:00
+timeout conn-holddown 0:00:15
+timeout igp stale-route 0:01:10
+aaa-server DELL-TACACS protocol tacacs+
+aaa-server DELL-TACACS (inside) host 10.80.122.31
+ key d3llftch1lt0n
+aaa-server DELL-TACACS (inside) host 10.80.122.32
+ key d3llftch1lt0n
+user-identity default-domain LOCAL
+aaa authentication http console DELL-TACACS LOCAL
+aaa authentication enable console DELL-TACACS LOCAL
+aaa authentication serial console LOCAL 
+aaa authentication ssh console DELL-TACACS LOCAL
+aaa authorization command DELL-TACACS LOCAL
+aaa accounting ssh console DELL-TACACS
+aaa accounting enable console DELL-TACACS
+aaa accounting command DELL-TACACS
+aaa authentication login-history
+http server enable
+http server idle-timeout 15
+http 192.168.1.0 255.255.255.0 inside
+http 10.109.48.17 255.255.255.255 inside
+http 10.109.48.0 255.255.255.0 inside
+snmp-server host-group inside snmp-servers-net-ftc poll community wh0car3s!! version 2c
+snmp-server host-group inside snmp-servers-net-wtc poll community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.93 poll community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.94 poll community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.23 poll community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.24 poll community wh0car3s!! version 2c
+snmp-server host inside 10.80.124.110 trap community wh0car3s!! version 2c
+snmp-server host inside 10.80.124.100 trap community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.68 trap community wh0car3s!! version 2c
+snmp-server host inside 10.72.124.120 trap community wh0car3s!! version 2c
+no snmp-server location
+no snmp-server contact
+snmp-server enable traps syslog
+snmp-server enable traps ipsec start stop
+snmp-server enable traps entity config-change cpu-temperature chassis-temperature accelerator-temperature
+snmp-server enable traps memory-threshold
+snmp-server enable traps interface-threshold
+snmp-server enable traps remote-access session-threshold-exceeded
+snmp-server enable traps connection-limit-reached
+snmp-server enable traps cpu threshold rising
+snmp-server enable traps ikev2 start stop
+snmp-server enable traps nat packet-discard
+snmp-server enable traps config
+no service password-recovery
+service sw-reset-button
+crypto ipsec security-association pmtu-aging infinite
+crypto ca trustpoint _SmartCallHome_ServerCA
+ no validation-usage
+ crl configure
+crypto ca trustpoint _SmartCallHome_ServerCA2
+ no validation-usage
+ crl configure
+crypto ca trustpool policy
+crypto ca certificate chain _SmartCallHome_ServerCA
+ certificate ca 0a0142800000014523c844b500000002
+    30820560 30820348 a0030201 0202100a 01428000 00014523 c844b500 00000230 
+    0d06092a 864886f7 0d01010b 0500304a 310b3009 06035504 06130255 53311230 
+    10060355 040a1309 4964656e 54727573 74312730 25060355 0403131e 4964656e 
+    54727573 7420436f 6d6d6572 6369616c 20526f6f 74204341 2031301e 170d3134 
+    30313136 31383132 32335a17 0d333430 31313631 38313232 335a304a 310b3009 
+    06035504 06130255 53311230 10060355 040a1309 4964656e 54727573 74312730 
+    25060355 0403131e 4964656e 54727573 7420436f 6d6d6572 6369616c 20526f6f 
+    74204341 20313082 0222300d 06092a86 4886f70d 01010105 00038202 0f003082 
+    020a0282 020100a7 5019de3f 993dd433 46f16f51 6182b2a9 4f8f6789 5d84d953 
+    dd0c28d9 d7f0ffae 95437299 f9b55d7c 8ac142e1 315074d1 810d7ccd 9b21ab43 
+    e2acad5e 866ef309 8a1f5a32 bda2eb94 f9e85c0a ecff98d2 af71b3b4 539f4e87 
+    ef92bcbd ec4f3230 884b175e 57c453c2 f602978d d9622bbf 241f628d dfc3b829 
+    4b49783c 93608822 fc99da36 c8c2a2d4 2c540067 356e73bf 0258f0a4 dde5b0a2 
+    267acae0 36a51916 f5fdb7ef ae3f40f5 6d5a04fd ce34ca24 dc74231b 5d331312 
+    5dc40125 f630dd02 5d9fe0d5 47bdb4eb 1ba1bb49 49d89f5b 02f38ae4 2490e462 
+    4f4fc1af 8b0e7417 a8d17288 6a7a0149 ccb44679 c617b1da 981e0759 fa752185 
+    65dd9056 cefbaba5 609dc49d f952b08b bd87f98f 2b230a23 763bf733 e1c900f3 
+    69f94ba2 e04ebc7e 93398407 f744707e fe075ae5 b1acd118 ccf235e5 494908ca 
+    56c93dfb 0f187d8b 3bc113c2 4d8fc94f 0e37e91f a10e6adf 622ecb35 0651792c 
+    c82538f4 fa4ba789 5c9cd2e3 0d39864a 747cd559 87c23f4e 0c5c52f4 3df75282 
+    f1eaa3ac fd49341a 28f34188 3a13eee8 deff991d 5fbacbe8 1ef2b950 60c031d3 
+    73e5efbe a0ed330b 74be2020 c4676cf0 08037a55 807f464e 96a7f41e 3ee1f6d8 
+    09e13364 2b63d732 5e9ff9c0 7b0f786f 97bc939a f99c1290 787a8087 15d77274 
+    9c557478 b1bae16e 7004ba4f a0ba68c3 7bff31f0 733d3d94 2ab10b41 0ea0fe4d 
+    88656b79 33b4d702 03010001 a3423040 300e0603 551d0f01 01ff0404 03020106 
+    300f0603 551d1301 01ff0405 30030101 ff301d06 03551d0e 04160414 ed4419c0 
+    d3f0068b eea47bbe 42e72654 c88e3676 300d0609 2a864886 f70d0101 0b050003 
+    82020100 0dae9032 f6a64b7c 44761961 1e2728cd 5e54ef25 bce30890 f929d7ae 
+    6808e194 0058ef2e 2e7e5352 8cb65c07 ea88ba99 8b5094d7 8280df61 090093ad 
+    0d14e6ce c1f23794 78b05f9c b3a273b8 8f059338 cd8d3eb0 b8fbc0cf b1f2ec2d 
+    2d1bccec aa9ab3aa 60821b2d 3bc3843d 578a961e 9c75b8d3 30cd6008 8390d38e 
+    54f14d66 c05d7403 40a3ee85 7ec21f77 9c06e8c1 a7185d52 95edc9dd 259e6dfa 
+    a9eda33a 34d0597b daed50f3 35bfedeb 144d31c7 60f4daf1 879ce248 e2c6c537 
+    fb0610fa 75596631 4729da76 9a1ce982 aeef9ab9 51f78823 9a699562 3ce55580 
+    36d75402 fff1b95d ced4236f d845844a 5b65ef89 0cdd14a7 20cb18a5 25b40df9 
+    01f0a2d2 f400c874 8ea12a48 8e65db13 c4e22517 7debbe87 5b172054 51934a53 
+    030bec5d ca33ed62 fd45c72f 5bdc58a0 8039e6fa d7fe1314 a6ed3d94 4a4274d4 
+    c3775973 cd8f46be 5538effa e89132ea 97580422 de38c3cc bc6dc933 3a6a0a69 
+    3fa0c8ea 728f8c63 8623bd6d 3c969e95 e0494caa a2b92a1b 9c368178 edc3e846 
+    e2265944 751ed975 8951cd10 849d6160 cb5df997 224d8e98 e6e37ff6 5bbbaecd 
+    ca4a816b 5e0bf351 e1742be9 7e27a7d9 99494ef8 a580db25 0f1c6362 8ac93367 
+    6b3c1083 c6addea8 cd168e8d f0073771 9ff2abfc 41f5c18b ec00375d 09e54e80 
+    effab15c 3806a51b 4ae1dc38 2d3cdcab 1f901ad5 4a9ceed1 706cccee f457f818 
+    ba846e87
+  quit
+crypto ca certificate chain _SmartCallHome_ServerCA2
+ certificate ca 0509
+    308205b7 3082039f a0030201 02020205 09300d06 092a8648 86f70d01 01050500 
+    3045310b 30090603 55040613 02424d31 19301706 0355040a 13105175 6f566164 
+    6973204c 696d6974 6564311b 30190603 55040313 1251756f 56616469 7320526f 
+    6f742043 41203230 1e170d30 36313132 34313832 3730305a 170d3331 31313234 
+    31383233 33335a30 45310b30 09060355 04061302 424d3119 30170603 55040a13 
+    1051756f 56616469 73204c69 6d697465 64311b30 19060355 04031312 51756f56 
+    61646973 20526f6f 74204341 20323082 0222300d 06092a86 4886f70d 01010105 
+    00038202 0f003082 020a0282 0201009a 18ca4b94 0d002daf 03298af0 0f81c8ae 
+    4c19851d 089fab29 4485f32f 81ad321e 9046bfa3 86261a1e fe7e1c18 3a5c9c60 
+    172a3a74 8333307d 615411cb edabe0e6 d2a27ef5 6b6f18b7 0a0b2dfd e93eef0a 
+    c6b310e9 dcc24617 f85dfda4 daff9e49 5a9ce633 e62496f7 3fba5b2b 1c7a35c2 
+    d667feab 66508b6d 28602bef d760c3c7 93bc8d36 91f37ff8 db1113c4 9c7776c1 
+    aeb7026a 817aa945 83e205e6 b956c194 378f4871 6322ec17 6507958a 4bdf8fc6 
+    5a0ae5b0 e35f5e6b 11ab0cf9 85eb44e9 f80473f2 e9fe5c98 8cf573af 6bb47ecd 
+    d45c022b 4c39e1b2 95952d42 87d7d5b3 9043b76c 13f1dedd f6c4f889 3fd175f5 
+    92c391d5 8a88d090 ecdc6dde 89c26571 968b0d03 fd9cbf5b 16ac92db eafe797c 
+    adebaff7 16cbdbcd 252be51f fb9a9fe2 51cc3a53 0c48e60e bdc9b476 0652e611 
+    13857263 0304e004 362b2019 02e874a7 1fb6c956 66f07525 dc67c10e 616088b3 
+    3ed1a8fc a3da1db0 d1b12354 df44766d ed41d8c1 b222b653 1cdf351d dca1772a 
+    31e42df5 e5e5dbc8 e0ffe580 d70b63a0 ff33a10f ba2c1515 ea97b3d2 a2b5bef2 
+    8c961e1a 8f1d6ca4 6137b986 7333d797 969e237d 82a44c81 e2a1d1ba 675f9507 
+    a32711ee 16107bbc 454a4cb2 04d2abef d5fd0c51 ce506a08 31f991da 0c8f645c 
+    03c33a8b 203f6e8d 673d3ad6 fe7d5b88 c95efbcc 61dc8b33 77d34432 35096204 
+    921610d8 9e2747fb 3b21e3f8 eb1d5b02 03010001 a381b030 81ad300f 0603551d 
+    130101ff 04053003 0101ff30 0b060355 1d0f0404 03020106 301d0603 551d0e04 
+    1604141a 8462bc48 4c332504 d4eed0f6 03c41946 d1946b30 6e060355 1d230467 
+    30658014 1a8462bc 484c3325 04d4eed0 f603c419 46d1946b a149a447 3045310b 
+    30090603 55040613 02424d31 19301706 0355040a 13105175 6f566164 6973204c 
+    696d6974 6564311b 30190603 55040313 1251756f 56616469 7320526f 6f742043 
+    41203282 02050930 0d06092a 864886f7 0d010105 05000382 0201003e 0a164d9f 
+    065ba8ae 715d2f05 2f67e613 4583c436 f6f3c026 0c0db547 645df8b4 72c946a5 
+    03182755 89787d76 ea963480 1720dce7 83f88dfc 07b8da5f 4d2e67b2 84fdd944 
+    fc775081 e67cb4c9 0d0b7253 f8760707 4147960c fbe08226 93558cfe 221f6065 
+    7c5fe726 b3f73290 9850d437 7155f692 2178f795 79faf82d 26876656 3077a637 
+    78335210 58ae3f61 8ef26ab1 ef187e4a 5963ca8d a256d5a7 2fbc561f cf39c1e2 
+    fb0aa815 2c7d4d7a 63c66c97 443cd26f c34a170a f890d257 a21951a5 2d9741da 
+    074fa950 da908d94 46e13ef0 94fd1000 38f53be8 40e1b46e 561a20cc 6f588ded 
+    2e458fd6 e9933fe7 b12cdf3a d6228cdc 84bb226f d0f8e4c6 39e90488 3cc3baeb 
+    557a6d80 9924f56c 01fbf897 b0945beb fdd26ff1 77680d35 6423acb8 55a103d1 
+    4d4219dc f8755956 a3f9a849 79f8af0e b911a07c b76aed34 d0b62662 381a870c 
+    f8e8fd2e d3907f07 912a1dd6 7e5c8583 99b03808 3fe95ef9 3507e4c9 626e577f 
+    a75095f7 bac89be6 8ea201c5 d666bf79 61f33c1c e1b9825c 5da0c3e9 d848bd19 
+    a2111419 6eb2861b 683e4837 1a88b75d 965e9cc7 ef276208 e291195c d2f121dd 
+    ba174282 97718153 31a99ff6 7d62bf72 e1a3931d cc8a265a 0938d0ce d70d8016 
+    b478a53a 874c8d8a a5d54697 f22c10b9 bc5422c0 01506943 9ef4b2ef 6df8ecda 
+    f1e3b1ef df918f54 2a0b25c1 2619c452 100565d5 8210eac2 31cd2e
+  quit
+telnet timeout 15
+ssh scopy enable
+ssh stricthostkeycheck
+ssh timeout 15
+ssh version 2
+ssh cipher encryption custom "aes128-gcm@openssh.com:aes256-ctr"
+ssh key-exchange group dh-group14-sha256
+ssh 10.80.120.0 255.255.255.0 inside
+ssh 10.80.124.0 255.255.255.0 inside
+ssh 10.80.48.0 255.255.255.192 inside
+ssh 10.72.48.0 255.255.255.192 inside
+ssh 10.109.49.0 255.255.255.192 inside
+ssh 10.80.202.170 255.255.255.255 inside
+ssh 10.80.220.32 255.255.255.255 inside
+ssh 10.80.47.115 255.255.255.255 inside
+ssh 10.80.47.114 255.255.255.255 inside
+ssh 10.80.38.38 255.255.255.255 inside
+ssh 10.80.207.8 255.255.255.255 inside
+ssh 10.80.207.11 255.255.255.255 inside
+ssh 10.109.48.0 255.255.255.0 inside
+console timeout 15
+
+threat-detection basic-threat
+threat-detection statistics access-list
+no threat-detection statistics tcp-intercept
+ntp server 10.80.122.33 source inside prefer
+ntp server 10.72.122.33 source inside
+dynamic-access-policy-record DfltAccessPolicy
+username nwadmin password $sha512$5000$/CDv8v8rWVa9Y+aG/4gjDg==$p/H2SozarxyZDF7t7oZl5g== pbkdf2 privilege 15
+!
+class-map inspection_default
+ match default-inspection-traffic
+!
+!
+policy-map type inspect dns preset_dns_map
+ parameters
+  message-length maximum client auto
+  message-length maximum 512
+  no tcp-inspection
+policy-map global_policy
+ class inspection_default
+  inspect dns preset_dns_map 
+  inspect ftp 
+  inspect h323 h225 
+  inspect h323 ras 
+  inspect rsh 
+  inspect rtsp 
+  inspect esmtp 
+  inspect sqlnet 
+  inspect skinny 
+  inspect sunrpc 
+  inspect xdmcp 
+  inspect sip  
+  inspect netbios 
+  inspect tftp 
+  inspect ip-options 
+  inspect snmp 
+!
+service-policy global_policy global
+prompt hostname context 
+no call-home reporting anonymous
+call-home
+ profile CiscoTAC-1
+  no active
+  destination address http https://tools.cisco.com/its/service/oddce/services/DDCEService
+  destination address email callhome@cisco.com
+  destination transport-method http
+  subscribe-to-alert-group diagnostic
+  subscribe-to-alert-group environment
+  subscribe-to-alert-group inventory periodic monthly
+  subscribe-to-alert-group configuration periodic monthly
+  subscribe-to-alert-group telemetry periodic daily
+Cryptochecksum:fb463ebfd1ed418dc1eb16ebbcfce4c0

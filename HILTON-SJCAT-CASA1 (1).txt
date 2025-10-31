@@ -1,0 +1,331 @@
+
+: 
+: Serial Number: JAD244709E1
+: Hardware:   ASA5506, 4096 MB RAM, CPU Atom C2000 series 1250 MHz, 1 CPU (4 cores)
+: Written by HiltonCDO at 19:59:14.048 UTC Sat Oct 11 2025
+!
+ASA Version 9.16(4)57 
+!
+hostname HILTON-SJCAT-CASA1
+domain-name hilton.com
+enable password $sha512$5000$DryM3vP6DehkD9BTiS9zYg==$bpCiN5ywFTMSC1TvwCrUgg== pbkdf2
+service-module 1 keepalive-timeout 4
+service-module 1 keepalive-counter 6
+service-module sfr keepalive-timeout 4
+service-module sfr keepalive-counter 6
+names
+no mac-address auto
+
+!
+interface GigabitEthernet1/1
+ nameif outside
+ security-level 0
+ ip address 192.168.216.254 255.255.255.0 
+!
+interface GigabitEthernet1/2
+ nameif inside
+ security-level 100
+ ip address 172.24.0.190 255.255.255.192 
+!
+interface GigabitEthernet1/3
+ nameif impulsify
+ security-level 0
+ ip address 192.168.217.254 255.255.255.0 
+!
+interface GigabitEthernet1/4
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/5
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/6
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/7
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/8
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface Management1/1
+ management-only
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+banner motd +--------------------------------------------------------------------+
+banner motd |                    ***   NOTICE / WARNING   ***                    |
+banner motd +--------------------------------------------------------------------+
+banner motd | This System is the property of Hilton Worldwide and is solely for  |
+banner motd | use by authorized users for official business purposes only.       |
+banner motd | Individuals using this System should have no expectation of        |
+banner motd | privacy and are subject to having all activities monitored and     |
+banner motd | recorded.  Use of this System evidences an express consent to such |
+banner motd | monitoring and agreement that if such monitoring reveals evidence  |
+banner motd | of possible abuse or criminal activity, System personnel may       |
+banner motd | provide the results of such monitoring to appropriate officials.   |
+banner motd +--------------------------------------------------------------------+
+boot system disk0:/asa9-16-4-57-lfbff-k8.SPA
+ftp mode passive
+dns domain-lookup inside
+dns server-group DefaultDNS
+ name-server 10.80.199.190 
+ name-server 10.80.199.192 
+ name-server 10.80.120.162 
+ name-server 10.72.120.126 
+ name-server 10.72.120.127 
+ domain-name hilton.com
+object network snmp-servers-net-ftc
+ subnet 10.80.124.0 255.255.255.0
+object network snmp-servers-net-wtc
+ subnet 10.72.124.0 255.255.255.0
+object network UniversalD
+ range 172.24.0.144 172.24.0.178
+object network Interface-SRV-192.168.216.20
+ host 192.168.216.20
+ description network Interface SRV 192.168.216.20 CHG0249636
+object network PMS-172.24.0.134
+ host 172.24.0.134
+ description network PMS SRV 172.24.0.134 CHG0249636
+object network QualysScanSrvrs.hilton.com
+ fqdn QualysScanSrvrs.hilton.com
+object network GISDiscovery
+ subnet 10.109.48.32 255.255.255.224
+object-group network Qualys-scanners-AWS-DC
+ network-object host 10.80.47.114
+ network-object host 10.80.47.115
+ network-object host 10.80.47.175
+ network-object host 10.80.47.176
+ network-object host 10.80.47.177
+ network-object host 10.80.47.178
+ network-object host 10.80.47.179
+ network-object host 10.80.47.182
+ network-object host 10.80.47.183
+ network-object host 10.80.47.184
+ network-object host 10.80.47.185
+ network-object host 10.80.47.186
+ network-object host 10.88.1.20
+ network-object 10.88.164.0 255.255.255.0
+ network-object host 10.99.162.11
+ network-object host 10.99.162.12
+ network-object host 10.99.163.12
+ network-object host 10.99.163.13
+ network-object host 10.193.0.18
+ network-object host 10.193.0.19
+ network-object host 10.193.0.20
+ network-object host 10.210.20.149
+ network-object host 10.99.130.10
+ network-object host 10.215.52.182
+ network-object host 10.100.10.20
+ network-object host 10.105.0.41
+ network-object host 10.216.22.32
+ network-object host 10.99.130.20
+ network-object host 10.99.129.11
+ network-object host 10.99.129.12
+ network-object host 10.99.129.13
+ network-object host 10.215.52.123
+ network-object host 10.215.52.23
+ network-object host 10.215.52.14
+ network-object host 10.215.52.250
+ network-object host 10.215.52.107
+ network-object host 10.109.49.36
+ network-object host 10.109.49.38
+ network-object host 10.109.49.53
+ network-object host 10.109.49.48
+ network-object host 10.109.49.39
+access-list inside remark *** CHG0270998 Qualys-Scanner ACL should be on TOP 6/14/2024***
+access-list inside extended permit ip object QualysScanSrvrs.hilton.com any4 
+access-list inside remark CHG0276564 Qualys-Scanner 08/10/2024
+access-list inside remark CHG0276564 Qualys-Scanner 08/10/2024
+access-list inside extended permit ip object GISDiscovery any4 
+access-list inside remark # RITM1378260  new interface 6/272022#
+access-list inside extended permit tcp object UniversalD host 192.168.216.20 eq https log 
+access-list inside extended permit tcp object UniversalD host 192.168.216.20 eq www log 
+access-list inside remark RITM# Allow Qualys scanners in AWS and Datacenter to scan POS network 2/2/2021
+access-list inside remark RITM# Allow Qualys scanners in AWS and Datacenter to scan POS network 2/2/2021
+access-list inside extended permit ip object-group Qualys-scanners-AWS-DC 192.168.216.0 255.255.255.0 log 
+access-list inside extended deny ip any any log 
+access-list outside extended permit tcp object Interface-SRV-192.168.216.20 object PMS-172.24.0.134 eq 35000 log 
+access-list outside remark Interface-SRV-192.168.216.20 to PMS-172.24.0.134 CHG0249636 25/08/2023
+access-list outside remark # RITM1378260  new interface 6/272022#
+access-list outside extended permit tcp host 192.168.216.20 host 172.24.0.132 eq 7012 log 
+access-list outside extended permit tcp host 192.168.216.20 host 172.24.0.132 eq 35000 log 
+access-list outside extended deny ip any any log 
+access-list impulsify extended permit tcp host 192.168.217.20 host 172.24.0.134 eq 35010 log 
+access-list impulsify remark #Impulsify  CHG0256214  RITM2207964 11/20/2023#
+access-list impulsify extended deny ip any any log 
+pager lines 24
+logging enable
+logging timestamp
+logging buffer-size 64000
+logging buffered informational
+logging trap informational
+logging history notifications
+logging asdm informational
+logging host inside 10.85.199.4
+mtu outside 1500
+mtu inside 1500
+mtu impulsify 1500
+ip verify reverse-path interface outside
+ip verify reverse-path interface inside
+ip verify reverse-path interface impulsify
+no failover
+no failover wait-disable
+monitor-interface outside
+monitor-interface inside
+monitor-interface impulsify
+no monitor-interface service-module 
+icmp unreachable rate-limit 1 burst-size 1
+icmp permit any echo-reply inside
+icmp permit any inside
+no asdm history enable
+arp timeout 14400
+no arp permit-nonconnected
+arp rate-limit 16384
+access-group outside in interface outside
+access-group inside in interface inside
+access-group impulsify in interface impulsify
+route inside 0.0.0.0 0.0.0.0 172.24.0.129 1
+timeout xlate 3:00:00
+timeout pat-xlate 0:00:30
+timeout conn 1:00:00 half-closed 0:10:00 udp 0:02:00 sctp 0:02:00 icmp 0:00:02
+timeout sunrpc 0:10:00 h323 0:05:00 h225 1:00:00 mgcp 0:05:00 mgcp-pat 0:05:00
+timeout sip 0:30:00 sip_media 0:02:00 sip-invite 0:03:00 sip-disconnect 0:02:00
+timeout sip-provisional-media 0:02:00 uauth 0:05:00 absolute
+timeout tcp-proxy-reassembly 0:01:00
+timeout floating-conn 0:00:00
+timeout conn-holddown 0:00:15
+timeout igp stale-route 0:01:10
+aaa-server AUTHSERVER protocol tacacs+
+aaa-server AUTHSERVER (inside) host 10.80.122.31
+ key hlt-tac
+aaa-server AUTHSERVER (inside) host 10.80.122.32
+ key hlt-tac
+user-identity default-domain LOCAL
+aaa authentication ssh console AUTHSERVER LOCAL
+aaa authentication enable console AUTHSERVER LOCAL
+aaa authentication http console AUTHSERVER LOCAL
+aaa authorization command AUTHSERVER LOCAL
+aaa accounting ssh console AUTHSERVER
+aaa accounting enable console AUTHSERVER
+aaa accounting command AUTHSERVER
+aaa authentication login-history
+http server enable
+http server idle-timeout 15
+http 10.109.48.17 255.255.255.255 inside
+http 10.109.48.0 255.255.255.0 inside
+snmp-server host-group inside snmp-servers-net-ftc poll community wh0car3s!! version 2c
+snmp-server host-group inside snmp-servers-net-wtc poll community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.93 poll community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.94 poll community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.23 poll community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.24 poll community wh0car3s!! version 2c
+snmp-server host inside 10.80.124.110 trap community wh0car3s!! version 2c
+snmp-server host inside 10.80.124.100 trap community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.68 trap community wh0car3s!! version 2c
+snmp-server host inside 10.72.124.120 trap community wh0car3s!! version 2c
+no snmp-server location
+no snmp-server contact
+snmp-server enable traps syslog
+snmp-server enable traps ipsec start stop
+snmp-server enable traps entity config-change cpu-temperature chassis-temperature accelerator-temperature
+snmp-server enable traps memory-threshold
+snmp-server enable traps interface-threshold
+snmp-server enable traps remote-access session-threshold-exceeded
+snmp-server enable traps connection-limit-reached
+snmp-server enable traps cpu threshold rising
+snmp-server enable traps ikev2 start stop
+snmp-server enable traps nat packet-discard
+snmp-server enable traps config
+no service password-recovery
+service sw-reset-button
+crypto ipsec security-association pmtu-aging infinite
+crypto ca trustpool policy
+telnet timeout 5
+ssh scopy enable
+ssh stricthostkeycheck
+ssh timeout 15
+ssh version 2
+ssh cipher encryption custom "aes128-gcm@openssh.com:aes256-ctr"
+ssh key-exchange group dh-group14-sha256
+ssh 10.80.120.0 255.255.255.0 inside
+ssh 10.80.124.0 255.255.255.0 inside
+ssh 10.80.48.0 255.255.255.192 inside
+ssh 10.72.48.0 255.255.255.192 inside
+ssh 10.109.49.0 255.255.255.192 inside
+ssh 10.80.202.170 255.255.255.255 inside
+ssh 10.80.220.32 255.255.255.255 inside
+ssh 10.80.47.115 255.255.255.255 inside
+ssh 10.80.47.114 255.255.255.255 inside
+ssh 10.80.38.38 255.255.255.255 inside
+ssh 10.80.207.8 255.255.255.255 inside
+ssh 10.80.207.11 255.255.255.255 inside
+ssh 10.109.48.0 255.255.255.0 inside
+console timeout 15
+
+threat-detection basic-threat
+threat-detection statistics access-list
+no threat-detection statistics tcp-intercept
+ntp server 10.80.122.33 source inside prefer
+ntp server 10.72.122.33 source inside
+dynamic-access-policy-record DfltAccessPolicy
+username nwadmin password $sha512$5000$AnxW29gtAS6I8V6yiezKYQ==$HflgO5nXzt8Lc+BsaWc6Bg== pbkdf2 privilege 15
+!
+class-map inspection_default
+ match default-inspection-traffic
+!
+!
+policy-map type inspect dns preset_dns_map
+ parameters
+  message-length maximum client auto
+  message-length maximum 512
+  no tcp-inspection
+policy-map global_policy
+ class inspection_default
+  inspect dns preset_dns_map 
+  inspect ftp 
+  inspect h323 h225 
+  inspect h323 ras 
+  inspect rsh 
+  inspect rtsp 
+  inspect esmtp 
+  inspect sqlnet 
+  inspect skinny 
+  inspect sunrpc 
+  inspect xdmcp 
+  inspect sip  
+  inspect netbios 
+  inspect tftp 
+  inspect ip-options 
+  inspect snmp 
+!
+service-policy global_policy global
+prompt hostname context 
+call-home
+ profile CiscoTAC-1
+  no active
+  destination address http https://tools.cisco.com/its/service/oddce/services/DDCEService
+  destination address email callhome@cisco.com
+  destination transport-method http
+  subscribe-to-alert-group diagnostic
+  subscribe-to-alert-group environment
+  subscribe-to-alert-group inventory periodic monthly
+  subscribe-to-alert-group configuration periodic monthly
+  subscribe-to-alert-group telemetry periodic daily
+Cryptochecksum:a9aa6892e947db51d2710bdee1c31ced

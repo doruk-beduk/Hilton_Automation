@@ -1,0 +1,305 @@
+
+: 
+: Serial Number: JAD21130HKK
+: Hardware:   ASA5506, 4096 MB RAM, CPU Atom C2000 series 1250 MHz, 1 CPU (4 cores)
+: Written by HiltonCDO at 19:55:24.620 UTC Sat Oct 11 2025
+!
+ASA Version 9.16(4)57 
+!
+hostname HILTON-AUSLN-CASA1
+domain-name hilton.com
+enable password $sha512$5000$H0T7FQEbrsst951iPm+n3g==$NcQlIA5GcGGOIn/6pspgrA== pbkdf2
+service-module 1 keepalive-timeout 4
+service-module 1 keepalive-counter 6
+service-module sfr keepalive-timeout 4
+service-module sfr keepalive-counter 6
+names
+no mac-address auto
+
+!
+interface GigabitEthernet1/1
+ description Outside Interface 
+ nameif outside
+ security-level 0
+ ip address 192.168.10.1 255.255.255.0 
+!
+interface GigabitEthernet1/2
+ description Inside Interface
+ nameif inside
+ security-level 100
+ ip address 172.28.10.254 255.255.255.0 
+!
+interface GigabitEthernet1/3
+ description simphony
+ nameif simphony
+ security-level 0
+ ip address 192.168.216.254 255.255.255.0 
+!
+interface GigabitEthernet1/4
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/5
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/6
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/7
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/8
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface Management1/1
+ management-only
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+banner motd +--------------------------------------------------------------------+
+banner motd |                    ***   NOTICE / WARNING   ***                    |
+banner motd +--------------------------------------------------------------------+
+banner motd | This System is the property of Hilton Worldwide and is solely for  |
+banner motd | use by authorized users for official business purposes only.       |
+banner motd | Individuals using this System should have no expectation of        |
+banner motd | privacy and are subject to having all activities monitored and     |
+banner motd | recorded.  Use of this System evidences an express consent to such |
+banner motd | monitoring and agreement that if such monitoring reveals evidence  |
+banner motd | of possible abuse or criminal activity, System personnel may       |
+banner motd | provide the results of such monitoring to appropriate officials.   |
+banner motd +--------------------------------------------------------------------+
+boot system disk0:/asa9-16-4-57-lfbff-k8.SPA
+boot system disk0:/asa9-14-3-11-lfbff-k8.SPA
+boot system disk0:/asa9-14-2-15-lfbff-k8.SPA
+ftp mode passive
+dns domain-lookup inside
+dns server-group DefaultDNS
+ name-server 10.80.199.190 
+ name-server 10.80.199.192 
+ name-server 10.80.120.162 
+ name-server 10.72.120.126 
+ name-server 10.72.120.127 
+ domain-name hilton.com
+object network obj_any
+ subnet 0.0.0.0 0.0.0.0
+object network snmp-servers-net-ftc
+ subnet 10.80.124.0 255.255.255.0
+object network snmp-servers-net-wtc
+ subnet 10.72.124.0 255.255.255.0
+object network QualysScanSrvrs.hilton.com
+ fqdn QualysScanSrvrs.hilton.com
+object network GISDiscovery
+ subnet 10.109.48.32 255.255.255.224
+object network simphony-Interface-Server
+ host 192.168.216.20
+object network simphony-OnQ-PMS-Server
+ host 172.28.10.4
+object network CAPS_Server_AUSLN_192.168.216.20
+ host 192.168.216.20
+object network OnQ_PMS_AUSLN_172.28.10.6
+ host 172.28.10.6
+object-group service simphony-PMS_server_services
+ service-object tcp destination eq 5009 
+ service-object tcp destination eq 35000 
+object-group service Simphony_Room_Charges_Messages_tcp_35000_tcp_5009
+ service-object tcp destination eq 35000 
+access-list outside remark <REQ000023886564:CPO New Firewall Install 5/24/17>
+access-list outside extended permit tcp 192.168.10.0 255.255.255.0 host 172.28.10.4 eq 38117 log 
+access-list outside extended permit tcp 192.168.10.0 255.255.255.0 host 172.28.10.4 eq https log 
+access-list outside extended deny ip any any log 
+access-list inside remark *** CHG0270998 Qualys-Scanner ACL should be on TOP 6/14/2024***
+access-list inside extended permit ip object QualysScanSrvrs.hilton.com any4 
+access-list inside remark CHG0274556 Qualys-Scanner 07/23/2024
+access-list inside extended permit ip object GISDiscovery any4 
+access-list inside remark <REQ000023886564:CPO New Firewall Install  5/24/17>
+access-list inside extended permit tcp 172.28.10.0 255.255.255.0 host 192.168.10.1 eq https log 
+access-list inside extended deny ip any any log 
+access-list simphony remark RITM2993157 CAPS Device will send inquiry or Room Charges Messages to OnQ PMS Server 05/20/2025
+access-list simphony extended permit object-group Simphony_Room_Charges_Messages_tcp_35000_tcp_5009 object CAPS_Server_AUSLN_192.168.216.20 object OnQ_PMS_AUSLN_172.28.10.6 log 
+access-list simphony remark SCTASK1841331 New simphony interface
+access-list simphony extended permit object-group simphony-PMS_server_services object simphony-Interface-Server object simphony-OnQ-PMS-Server log 
+access-list simphony extended deny ip any any log 
+pager lines 24
+logging enable
+logging timestamp
+logging buffer-size 64000
+logging buffered informational
+logging trap informational
+logging history notifications
+logging asdm informational
+logging host inside 10.85.199.4
+mtu outside 1500
+mtu inside 1500
+mtu simphony 1500
+ip verify reverse-path interface outside
+ip verify reverse-path interface inside
+ip verify reverse-path interface simphony
+no failover
+no failover wait-disable
+monitor-interface outside
+monitor-interface inside
+monitor-interface simphony
+no monitor-interface service-module 
+icmp unreachable rate-limit 1 burst-size 1
+icmp permit any echo-reply outside
+icmp permit any outside
+icmp permit any echo-reply inside
+icmp permit any inside
+no asdm history enable
+arp timeout 14400
+no arp permit-nonconnected
+arp rate-limit 16384
+access-group outside in interface outside
+access-group inside in interface inside
+access-group simphony in interface simphony
+route inside 0.0.0.0 0.0.0.0 172.28.10.1 1
+timeout xlate 3:00:00
+timeout pat-xlate 0:00:30
+timeout conn 1:00:00 half-closed 0:10:00 udp 0:02:00 sctp 0:02:00 icmp 0:00:02
+timeout sunrpc 0:10:00 h323 0:05:00 h225 1:00:00 mgcp 0:05:00 mgcp-pat 0:05:00
+timeout sip 0:30:00 sip_media 0:02:00 sip-invite 0:03:00 sip-disconnect 0:02:00
+timeout sip-provisional-media 0:02:00 uauth 0:05:00 absolute
+timeout tcp-proxy-reassembly 0:01:00
+timeout floating-conn 0:00:00
+timeout conn-holddown 0:00:15
+timeout igp stale-route 0:01:10
+aaa-server AUTHSERVER protocol tacacs+
+aaa-server AUTHSERVER (inside) host 10.80.122.31
+ key hlt-tac
+aaa-server AUTHSERVER (inside) host 10.80.122.32
+ key hlt-tac
+user-identity default-domain LOCAL
+aaa authentication http console AUTHSERVER LOCAL
+aaa authentication ssh console AUTHSERVER LOCAL
+aaa authentication enable console AUTHSERVER LOCAL
+aaa authorization command AUTHSERVER LOCAL
+aaa accounting ssh console AUTHSERVER
+aaa accounting enable console AUTHSERVER
+aaa accounting command AUTHSERVER
+aaa authentication login-history
+http server enable
+http server idle-timeout 15
+http 192.168.1.0 255.255.255.0 inside
+http 10.109.48.17 255.255.255.255 inside
+http 10.109.48.0 255.255.255.0 inside
+snmp-server host-group inside snmp-servers-net-ftc poll community wh0car3s!! version 2c
+snmp-server host-group inside snmp-servers-net-wtc poll community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.93 poll community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.94 poll community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.23 poll community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.24 poll community wh0car3s!! version 2c
+snmp-server host inside 10.80.124.110 trap community wh0car3s!! version 2c
+snmp-server host inside 10.80.124.100 trap community wh0car3s!! version 2c
+snmp-server host inside 10.72.120.68 trap community wh0car3s!! version 2c
+snmp-server host inside 10.72.124.120 trap community wh0car3s!! version 2c
+no snmp-server location
+no snmp-server contact
+snmp-server enable traps syslog
+snmp-server enable traps ipsec start stop
+snmp-server enable traps entity config-change cpu-temperature chassis-temperature accelerator-temperature
+snmp-server enable traps memory-threshold
+snmp-server enable traps interface-threshold
+snmp-server enable traps remote-access session-threshold-exceeded
+snmp-server enable traps connection-limit-reached
+snmp-server enable traps cpu threshold rising
+snmp-server enable traps ikev2 start stop
+snmp-server enable traps nat packet-discard
+snmp-server enable traps config
+no service password-recovery
+service sw-reset-button
+crypto ipsec security-association pmtu-aging infinite
+crypto ca trustpool policy
+telnet timeout 15
+ssh scopy enable
+ssh stricthostkeycheck
+ssh timeout 15
+ssh version 2
+ssh cipher encryption custom "aes128-gcm@openssh.com:aes256-ctr"
+ssh key-exchange group dh-group14-sha256
+ssh 10.80.120.0 255.255.255.0 inside
+ssh 10.80.124.0 255.255.255.0 inside
+ssh 10.80.48.0 255.255.255.192 inside
+ssh 10.109.49.0 255.255.255.192 inside
+ssh 10.80.202.170 255.255.255.255 inside
+ssh 10.80.220.32 255.255.255.255 inside
+ssh 10.80.47.115 255.255.255.255 inside
+ssh 10.80.47.114 255.255.255.255 inside
+ssh 10.80.38.38 255.255.255.255 inside
+ssh 10.72.48.0 255.255.255.192 inside
+ssh 10.109.48.17 255.255.255.255 inside
+ssh 10.80.207.8 255.255.255.255 inside
+ssh 10.80.207.11 255.255.255.255 inside
+ssh 10.109.48.0 255.255.255.0 inside
+console timeout 15
+
+threat-detection basic-threat
+threat-detection statistics access-list
+no threat-detection statistics tcp-intercept
+ntp server 10.80.122.33
+ntp server 10.72.122.33
+ssl server-version tlsv1.2
+ssl client-version tlsv1.2
+ssl cipher default custom "DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:AES256-SHA:AES128-SHA"
+ssl cipher tlsv1.2 custom "DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:AES256-SHA:AES128-SHA"
+ssl cipher dtlsv1 custom "DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:AES256-SHA:AES128-SHA"
+dynamic-access-policy-record DfltAccessPolicy
+username nwadmin password $sha512$5000$6elk99KmRCI73AJ4H39QTg==$ZDUprjgb75VCn0UHThHeuw== pbkdf2 privilege 15
+!
+class-map inspection_default
+ match default-inspection-traffic
+!
+!
+policy-map type inspect dns preset_dns_map
+ parameters
+  message-length maximum client auto
+  message-length maximum 512
+  no tcp-inspection
+policy-map global_policy
+ class inspection_default
+  inspect dns preset_dns_map 
+  inspect ftp 
+  inspect h323 h225 
+  inspect h323 ras 
+  inspect rsh 
+  inspect rtsp 
+  inspect esmtp 
+  inspect sqlnet 
+  inspect skinny 
+  inspect sunrpc 
+  inspect xdmcp 
+  inspect netbios 
+  inspect tftp 
+  inspect ip-options 
+  inspect snmp 
+!
+service-policy global_policy global
+prompt hostname context 
+no call-home reporting anonymous
+call-home
+ profile CiscoTAC-1
+  no active
+  destination address http https://tools.cisco.com/its/service/oddce/services/DDCEService
+  destination address email callhome@cisco.com
+  destination transport-method http
+  subscribe-to-alert-group diagnostic
+  subscribe-to-alert-group environment
+  subscribe-to-alert-group inventory periodic monthly
+  subscribe-to-alert-group configuration periodic monthly
+  subscribe-to-alert-group telemetry periodic daily
+Cryptochecksum:1f43eb9a43b5420450e1d8766115efef
